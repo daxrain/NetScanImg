@@ -107,13 +107,21 @@ namespace Server
                         Console.WriteLine("MESSAGGIO VUOTO");
                         break;
                     case request_type.SCAN:
-                        
-                        Image scannedImage = Scanner.scan();
+                        Scanner scanner = new Scanner();
+                        Image scannedImage = null;
+                        Thread thread = new Thread(
+                            () =>
+                               scannedImage = scanner.scan()
+                            );
+                        thread.Start();
+                        thread.Join();
+                        //Image scannedImage = Scanner.scan();
 
                         _tcpClient.Connect(remote_client);
                         //formatter.Serialize(_tcpClient.GetStream(), new ScanResponse(Image.FromFile(@"C:\porcini.jpg")));
                         formatter.Serialize(_tcpClient.GetStream(), new ScanResponse(scannedImage));
                         _tcpClient.Close();
+                        thread.Interrupt();
                         Console.WriteLine("INVIO IMMAGINE");
                         break;
                 }

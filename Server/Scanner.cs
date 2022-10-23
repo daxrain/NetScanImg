@@ -6,18 +6,17 @@ using System.Threading.Tasks;
 using WIA;
 using System.IO;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Server
 {
     public class Scanner
     {
-        
-
-        public static Image scan()
+        public Image scan()
         {
-            var deviceManager = new DeviceManager();
+            DeviceManager deviceManager = new DeviceManager();
             DeviceInfo firstScannerAvailable = null;
-            Image myImg;
+            ImageFile imageFile = null;
 
             for (int i = 1; i <= deviceManager.DeviceInfos.Count; i++)
             {
@@ -33,17 +32,49 @@ namespace Server
             }
 
             // Connect to the first available scanner
-            var device = firstScannerAvailable.Connect();
+            Device device = firstScannerAvailable.Connect();
 
             // Select the scanner
-            var scannerItem = device.Items[1];
+            Item scannerItem = device.Items[1];
 
-            // Retrieve a image in JPEG format and store it into a variable
-            var imageFile = (ImageFile)scannerItem.Transfer(FormatID.wiaFormatBMP);
+            try
+            {
+                // Retrieve a image in JPEG format and store it into a variable
+                imageFile = (ImageFile)scannerItem.Transfer(FormatID.wiaFormatJPEG);
+                scannerItem = null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Errore SCANNER non pronto");
+            }
 
-            myImg = (Bitmap)((new ImageConverter()).ConvertFrom(imageFile.FileData));
+            //myImg = (Bitmap)((new ImageConverter()).ConvertFrom(imageFile.ARGBData));
+            return ToBitmap(imageFile);
+        }
 
-            return myImg;
+        public static Bitmap ToBitmap(ImageFile image)
+        {
+            Bitmap result;
+            byte[] data;
+
+            data = (byte[])image.FileData.get_BinaryData();
+
+            using (MemoryStream stream = new MemoryStream(data))
+            {
+                using (Image scannedImage = Image.FromStream(stream))
+                {
+                    result = new Bitmap(image.Width, image.Height, PixelFormat.Format32bppArgb);
+
+                    using (Graphics g = Graphics.FromImage(result))
+                    {
+                        g.Clear(Color.Transparent);
+                        g.PageUnit = GraphicsUnit.Pixel;
+                        g.DrawImage(scannedImage, new Rectangle(0, 0, image.Width, image.Height));
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }
