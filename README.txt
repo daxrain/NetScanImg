@@ -1,3 +1,10 @@
+INSALL THE SERVICE:
+Open a command prompt as an Administrator
+cd C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe + Your copied path + \your service name + .exe
+If you want to uninstall your service, fire the below command.
+Syntax InstallUtil.exe -u + Your copied path + \your service name + .exe
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe -u C:\Users\Faisal-Pathan\source\repos\MyFirstService\MyFirstService\bin\Debug\MyFirstService.exe
+
 References:
 https://ourcodeworld.com/articles/read/382/creating-a-scanning-application-in-winforms-with-csharp
 https://www.c-sharpcorner.com/article/create-windows-services-in-c-sharp/
