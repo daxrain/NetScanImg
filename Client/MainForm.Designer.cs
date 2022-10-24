@@ -39,6 +39,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.server_ip_TextBox = new System.Windows.Forms.TextBox();
+            this.scanner_comboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.testImmagine)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -89,6 +90,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.scanner_comboBox);
             this.tabPage1.Controls.Add(this.testImmagine);
             this.tabPage1.Controls.Add(this.btn_scan);
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
@@ -157,6 +159,14 @@
             this.server_ip_TextBox.Size = new System.Drawing.Size(155, 23);
             this.server_ip_TextBox.TabIndex = 1;
             // 
+            // scanner_comboBox
+            // 
+            this.scanner_comboBox.FormattingEnabled = true;
+            this.scanner_comboBox.Location = new System.Drawing.Point(546, 28);
+            this.scanner_comboBox.Name = "scanner_comboBox";
+            this.scanner_comboBox.Size = new System.Drawing.Size(121, 23);
+            this.scanner_comboBox.TabIndex = 3;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -189,5 +199,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox server_ip_TextBox;
+        private System.Windows.Forms.ComboBox scanner_comboBox;
     }
 }

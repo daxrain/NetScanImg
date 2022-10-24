@@ -6,7 +6,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Runtime.Serialization;
 using Protocol.MyMessages;
+using Protocol;
 using System.IO;
+using System.Collections;
 
 namespace Client
 {
@@ -18,7 +20,7 @@ namespace Client
         public static bool goingOn = true;
         public BinaryFormatter bf = new BinaryFormatter();
         public static Parameters param;
-
+        
         public MainForm()
         {
             InitializeComponent();
@@ -39,7 +41,8 @@ namespace Client
             server_port_TextBox.Text = param.server_port.ToString();
 
             startListener(default_port + 1);
-        }   
+            send_request(request_type.LIST);
+        }
         
         public Thread startListener(int port)
         {
@@ -60,10 +63,20 @@ namespace Client
                     TcpClient newClient = _response_listener.AcceptTcpClient();
                     IFormatter formatter = new BinaryFormatter();
                     Response resp = (Response)formatter.Deserialize(newClient.GetStream());
-                    
-                    if(resp is ScanResponse)
+                    if(resp is ListResponse)
                     {
-                        //MessageBox.Show("Il server mi ha restituito un immagine");
+                        ListResponse resp_list = (ListResponse)resp;
+                        var ds = resp_list.scanners;
+                        scanner_comboBox.DataSource = ds;
+                        scanner_comboBox.ValueMember = "ID";
+                        scanner_comboBox.DisplayMember = "Name";
+                        scanner_comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+                        
+                        //resp_list.scanners
+                        //MessageBox.Show("HO RICEVUTO LA LISTA DEGLI SCANNER");
+                    }
+                    else if(resp is ScanResponse)
+                    {
                         this.InvokeEx(f => f.testImmagine.Image = ((ScanResponse)resp).img);
                     }
                     else if(resp is EmptyResponse)

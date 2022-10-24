@@ -106,16 +106,20 @@ namespace Server
                         _tcpClient.Close();
                         Console.WriteLine("MESSAGGIO VUOTO");
                         break;
+                    case request_type.LIST:
+                        _tcpClient.Connect(remote_client);
+                        formatter.Serialize(_tcpClient.GetStream(), new ListResponse(Scanner.scanner_list()));
+                        _tcpClient.Close();
+                        Console.WriteLine("MESSAGGIO LIST");
+                        break;
                     case request_type.SCAN:
-                        Scanner scanner = new Scanner();
                         Image scannedImage = null;
                         Thread thread = new Thread(
                             () =>
-                               scannedImage = scanner.scan()
+                               scannedImage = Scanner.scan(Scanner.getDevInfo(Scanner.scanner_list()[0].ID))
                             );
                         thread.Start();
                         thread.Join();
-                        //Image scannedImage = Scanner.scan();
 
                         _tcpClient.Connect(remote_client);
                         //formatter.Serialize(_tcpClient.GetStream(), new ScanResponse(Image.FromFile(@"C:\porcini.jpg")));

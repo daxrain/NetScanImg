@@ -23,6 +23,7 @@ namespace Protocol
         public class Request : MyMessage
         {
             private request_type myId;
+            private Scanner device;
 
             public Request()
             {
@@ -34,7 +35,14 @@ namespace Protocol
                 MyId = type;
             }
 
+            public Request(request_type myId, Scanner dev)
+            {
+                Device = dev;
+                MyId = myId;
+            }
+
             public request_type MyId { get => myId; set => myId = value; }
+            public Scanner Device { get => device; set => device = value; }
         }
 
         [Serializable]
@@ -62,14 +70,14 @@ namespace Protocol
         [Serializable]
         public class ListResponse : Response
         {
-            public List<string> scanners;
+            public List<Scanner> scanners;
 
             public ListResponse() : base()
             {
-                scanners = new List<string>();
+                scanners = new List<Scanner>();
             }
 
-            public ListResponse(List<string> scanner_list) : base()
+            public ListResponse(List<Scanner> scanner_list) : base()
             {
                 scanners = scanner_list;
             }
