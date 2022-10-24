@@ -41,7 +41,7 @@ namespace Client
             server_port_TextBox.Text = param.server_port.ToString();
 
             startListener(default_port + 1);
-            send_request(request_type.LIST);
+            send_request(new Request(request_type.LIST));
         }
         
         public Thread startListener(int port)
@@ -66,11 +66,21 @@ namespace Client
                     if(resp is ListResponse)
                     {
                         ListResponse resp_list = (ListResponse)resp;
-                        var ds = resp_list.scanners;
-                        scanner_comboBox.DataSource = ds;
-                        scanner_comboBox.ValueMember = "ID";
-                        scanner_comboBox.DisplayMember = "Name";
-                        scanner_comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+                        this.Invoke((MethodInvoker)delegate ()
+                        {
+                            if (resp_list.scanners.Count == 0)
+                            {
+                                resp_list.scanners.Add(new Scanner("Nessuno", "Nessuno"));
+                                btn_scan.Enabled = false;
+                            }
+                            foreach(Scanner dev in resp_list.scanners)
+                                scanner_comboBox.Items.Add(new Scanner("Nessuno", "Nessuno"));
+                            //scanner_comboBox.DataSource = resp_list.scanners;
+                            scanner_comboBox.ValueMember = "ID";
+                            scanner_comboBox.DisplayMember = "Name";
+                            scanner_comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+                            scanner_comboBox.SelectedIndex = 0;
+                        });
                         
                         //resp_list.scanners
                         //MessageBox.Show("HO RICEVUTO LA LISTA DEGLI SCANNER");
@@ -105,15 +115,15 @@ namespace Client
             Thread.Sleep(1000);
             goingOn = true;
             startListener(default_port + 1);
-            send_request(request_type.EMPTY);
+            send_request(new Request(request_type.EMPTY));
         }
 
         private void btn_scan_Click(object sender, EventArgs e)
         {
-            send_request(request_type.SCAN);
+            send_request(new Request(request_type.SCAN, (Scanner) scanner_comboBox.SelectedItem));
         }
 
-        private void send_request(request_type tipo)
+        private void send_request(Request scan_req)
         {
             IPEndPoint ipep = new IPEndPoint(server_ip, default_port);
             TcpClient _tcpClient = new TcpClient();
@@ -121,7 +131,7 @@ namespace Client
             try
             {
                 _tcpClient.Connect(ipep);
-                formatter.Serialize(_tcpClient.GetStream(), new Request(tipo));
+                formatter.Serialize(_tcpClient.GetStream(), scan_req);
             }
             catch (Exception exc)
             {

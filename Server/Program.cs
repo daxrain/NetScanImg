@@ -113,20 +113,24 @@ namespace Server
                         Console.WriteLine("MESSAGGIO LIST");
                         break;
                     case request_type.SCAN:
-                        Image scannedImage = null;
-                        Thread thread = new Thread(
-                            () =>
-                               scannedImage = Scanner.scan(Scanner.getDevInfo(Scanner.scanner_list()[0].ID))
-                            );
-                        thread.Start();
-                        thread.Join();
+                        if (Scanner.scanner_list().Count > 0)
+                        {
+                            Image scannedImage = null;
+                            Request scan_req = req_msg;
+                            Thread thread = new Thread(
+                                () =>
+                                    scannedImage = Scanner.scan(Scanner.getDevInfo(scan_req.Device.ID))
+                                );
+                            thread.Start();
+                            thread.Join();
 
-                        _tcpClient.Connect(remote_client);
-                        //formatter.Serialize(_tcpClient.GetStream(), new ScanResponse(Image.FromFile(@"C:\porcini.jpg")));
-                        formatter.Serialize(_tcpClient.GetStream(), new ScanResponse(scannedImage));
-                        _tcpClient.Close();
-                        thread.Interrupt();
-                        Console.WriteLine("INVIO IMMAGINE");
+                            _tcpClient.Connect(remote_client);
+                            //formatter.Serialize(_tcpClient.GetStream(), new ScanResponse(Image.FromFile(@"C:\porcini.jpg")));
+                            formatter.Serialize(_tcpClient.GetStream(), new ScanResponse(scannedImage));
+                            _tcpClient.Close();
+                            thread.Interrupt();
+                            Console.WriteLine("INVIO IMMAGINE");
+                        }
                         break;
                 }
             }
