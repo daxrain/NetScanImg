@@ -60,15 +60,15 @@ namespace Server
             try
             { 
                 // Connect to the first available scanner
-                Device device = dev.Connect();
+                    Device device = dev.Connect();
                 // Select the scanner
                 Item scannerItem = device.Items[1];
                 
-                imageFile = (ImageFile)scannerItem.Transfer(FormatID.wiaFormatJPEG);
+                imageFile = (ImageFile)scannerItem.Transfer(FormatID.wiaFormatBMP);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Errore SCANNER non pronto");
+                Console.WriteLine("Errore SCANNER non pronto\n" + ex.ToString());
             }
 
             if(imageFile!=null)

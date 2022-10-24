@@ -46,7 +46,7 @@ namespace Client
         
         public Thread startListener(int port)
         {
-            _response_listener = new TcpListener(IPAddress.Loopback, port);
+            _response_listener = new TcpListener(IPAddress.Any, port);
             _response_listener.Start();
 
             Thread th = new Thread(doListen);
@@ -74,7 +74,7 @@ namespace Client
                                 btn_scan.Enabled = false;
                             }
                             foreach(Scanner dev in resp_list.scanners)
-                                scanner_comboBox.Items.Add(new Scanner("Nessuno", "Nessuno"));
+                                scanner_comboBox.Items.Add(dev);
                             //scanner_comboBox.DataSource = resp_list.scanners;
                             scanner_comboBox.ValueMember = "ID";
                             scanner_comboBox.DisplayMember = "Name";

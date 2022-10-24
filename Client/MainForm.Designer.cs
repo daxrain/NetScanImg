@@ -33,13 +33,13 @@
             this.btn_scan = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.scanner_comboBox = new System.Windows.Forms.ComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btn_save_conf = new System.Windows.Forms.Button();
             this.server_port_TextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.server_ip_TextBox = new System.Windows.Forms.TextBox();
-            this.scanner_comboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.testImmagine)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -48,7 +48,7 @@
             // 
             // btn_test_connection
             // 
-            this.btn_test_connection.Location = new System.Drawing.Point(497, 35);
+            this.btn_test_connection.Location = new System.Drawing.Point(338, 39);
             this.btn_test_connection.Name = "btn_test_connection";
             this.btn_test_connection.Size = new System.Drawing.Size(123, 23);
             this.btn_test_connection.TabIndex = 0;
@@ -61,16 +61,16 @@
             this.testImmagine.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.testImmagine.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.testImmagine.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.testImmagine.Location = new System.Drawing.Point(43, 23);
+            this.testImmagine.Location = new System.Drawing.Point(43, 58);
             this.testImmagine.Name = "testImmagine";
-            this.testImmagine.Size = new System.Drawing.Size(443, 581);
+            this.testImmagine.Size = new System.Drawing.Size(393, 526);
             this.testImmagine.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.testImmagine.TabIndex = 1;
             this.testImmagine.TabStop = false;
             // 
             // btn_scan
             // 
-            this.btn_scan.Location = new System.Drawing.Point(527, 581);
+            this.btn_scan.Location = new System.Drawing.Point(504, 18);
             this.btn_scan.Name = "btn_scan";
             this.btn_scan.Size = new System.Drawing.Size(123, 23);
             this.btn_scan.TabIndex = 2;
@@ -100,6 +100,14 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "SCANSIONE";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // scanner_comboBox
+            // 
+            this.scanner_comboBox.FormattingEnabled = true;
+            this.scanner_comboBox.Location = new System.Drawing.Point(43, 18);
+            this.scanner_comboBox.Name = "scanner_comboBox";
+            this.scanner_comboBox.Size = new System.Drawing.Size(219, 23);
+            this.scanner_comboBox.TabIndex = 3;
             // 
             // tabPage2
             // 
@@ -159,20 +167,12 @@
             this.server_ip_TextBox.Size = new System.Drawing.Size(155, 23);
             this.server_ip_TextBox.TabIndex = 1;
             // 
-            // scanner_comboBox
-            // 
-            this.scanner_comboBox.FormattingEnabled = true;
-            this.scanner_comboBox.Location = new System.Drawing.Point(546, 28);
-            this.scanner_comboBox.Name = "scanner_comboBox";
-            this.scanner_comboBox.Size = new System.Drawing.Size(121, 23);
-            this.scanner_comboBox.TabIndex = 3;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(917, 655);
+            this.ClientSize = new System.Drawing.Size(696, 655);
             this.Controls.Add(this.tabControl1);
             this.Name = "MainForm";
             this.Text = "NetScanImg";

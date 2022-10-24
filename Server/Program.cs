@@ -61,6 +61,7 @@ namespace Server
 
         public static Thread startListener(int port)
         {
+            Console.WriteLine("Server in ascolto nella porta: " + port);
             _server = new TcpListener(IPAddress.Any, port);
             _server.Start();
             
@@ -113,10 +114,10 @@ namespace Server
                         Console.WriteLine("MESSAGGIO LIST");
                         break;
                     case request_type.SCAN:
-                        if (Scanner.scanner_list().Count > 0)
+                        Image scannedImage = null;
+                        Request scan_req = req_msg;
+                        if (Scanner.scanner_list().Count > 0 && !String.IsNullOrEmpty(scan_req.Device.ID) )
                         {
-                            Image scannedImage = null;
-                            Request scan_req = req_msg;
                             Thread thread = new Thread(
                                 () =>
                                     scannedImage = Scanner.scan(Scanner.getDevInfo(scan_req.Device.ID))
