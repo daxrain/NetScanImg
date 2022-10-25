@@ -1,4 +1,5 @@
-﻿using Protocol.MyMessages;
+﻿using Protocol;
+using Protocol.MyMessages;
 using System;
 using System.Net;
 using System.Net.Sockets;

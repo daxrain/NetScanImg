@@ -8,19 +8,22 @@ using System.Runtime.Serialization;
 using Protocol.MyMessages;
 using Protocol;
 using System.IO;
+using System.Drawing;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Client
 {
     public partial class MainForm : Form
     {
-        public static IPAddress server_ip;
+        private static IPAddress server_ip;
         private static int default_port = 9050;
-        public static TcpListener _response_listener;
-        public static bool goingOn = true;
-        public BinaryFormatter bf = new BinaryFormatter();
-        public static Parameters param;
-        
+        private static TcpListener _response_listener;
+        private static bool goingOn = true;
+        private BinaryFormatter bf = new BinaryFormatter();
+        private static Parameters param;
+        private static List<Image> images = new List<Image>();
+
         public MainForm()
         {
             InitializeComponent();
@@ -79,19 +82,25 @@ namespace Client
                             }
                             foreach(Scanner dev in resp_list.scanners)
                                 scanner_comboBox.Items.Add(dev);
-                            //scanner_comboBox.DataSource = resp_list.scanners;
+                            //scanner_comboBox.DataSource = resp_list.scanners; //Non funziona
                             scanner_comboBox.ValueMember = "ID";
                             scanner_comboBox.DisplayMember = "Name";
                             scanner_comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
                             scanner_comboBox.SelectedIndex = 0;
                         });
-                        
-                        //resp_list.scanners
-                        //MessageBox.Show("HO RICEVUTO LA LISTA DEGLI SCANNER");
                     }
                     else if(resp is ScanResponse)
                     {
-                        this.InvokeEx(f => f.testImmagine.Image = ((ScanResponse)resp).img);
+                        this.Invoke((MethodInvoker)delegate ()
+                        {
+                            Image scanned_img = ((ScanResponse)resp).img;
+                            if (scanned_img != null)
+                            {
+                                images.Add(scanned_img);
+                                scanned_images_PictureBox.Image = scanned_img;
+                            }
+                        });
+                        //this.InvokeEx(f => f.scanned_images_PictureBox.Image = ((ScanResponse)resp).img);
                     }
                     else if(resp is EmptyResponse)
                     {

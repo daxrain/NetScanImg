@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.btn_test_connection = new System.Windows.Forms.Button();
-            this.testImmagine = new System.Windows.Forms.PictureBox();
+            this.scanned_images_PictureBox = new System.Windows.Forms.PictureBox();
             this.btn_scan = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -49,7 +49,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.server_ip_TextBox = new System.Windows.Forms.TextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.testImmagine)).BeginInit();
+            this.nextImage_button = new System.Windows.Forms.Button();
+            this.previousImage_button = new System.Windows.Forms.Button();
+            this.deleteImage_button = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.scanned_images_PictureBox)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -68,17 +71,17 @@
             this.btn_test_connection.UseVisualStyleBackColor = true;
             this.btn_test_connection.Click += new System.EventHandler(this.btn_test_connection_Click);
             // 
-            // testImmagine
+            // scanned_images_PictureBox
             // 
-            this.testImmagine.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.testImmagine.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.testImmagine.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.testImmagine.Location = new System.Drawing.Point(43, 58);
-            this.testImmagine.Name = "testImmagine";
-            this.testImmagine.Size = new System.Drawing.Size(393, 526);
-            this.testImmagine.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.testImmagine.TabIndex = 1;
-            this.testImmagine.TabStop = false;
+            this.scanned_images_PictureBox.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.scanned_images_PictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.scanned_images_PictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.scanned_images_PictureBox.Location = new System.Drawing.Point(43, 58);
+            this.scanned_images_PictureBox.Name = "scanned_images_PictureBox";
+            this.scanned_images_PictureBox.Size = new System.Drawing.Size(393, 526);
+            this.scanned_images_PictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.scanned_images_PictureBox.TabIndex = 1;
+            this.scanned_images_PictureBox.TabStop = false;
             // 
             // btn_scan
             // 
@@ -102,9 +105,12 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.deleteImage_button);
+            this.tabPage1.Controls.Add(this.previousImage_button);
+            this.tabPage1.Controls.Add(this.nextImage_button);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.scanner_comboBox);
-            this.tabPage1.Controls.Add(this.testImmagine);
+            this.tabPage1.Controls.Add(this.scanned_images_PictureBox);
             this.tabPage1.Controls.Add(this.btn_scan);
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
@@ -273,17 +279,44 @@
             this.server_ip_TextBox.Size = new System.Drawing.Size(155, 23);
             this.server_ip_TextBox.TabIndex = 1;
             // 
+            // nextImage_button
+            // 
+            this.nextImage_button.Location = new System.Drawing.Point(361, 598);
+            this.nextImage_button.Name = "nextImage_button";
+            this.nextImage_button.Size = new System.Drawing.Size(75, 23);
+            this.nextImage_button.TabIndex = 9;
+            this.nextImage_button.Text = "AVANTI";
+            this.nextImage_button.UseVisualStyleBackColor = true;
+            // 
+            // previousImage_button
+            // 
+            this.previousImage_button.Location = new System.Drawing.Point(43, 598);
+            this.previousImage_button.Name = "previousImage_button";
+            this.previousImage_button.Size = new System.Drawing.Size(75, 23);
+            this.previousImage_button.TabIndex = 10;
+            this.previousImage_button.Text = "INDIETRO";
+            this.previousImage_button.UseVisualStyleBackColor = true;
+            // 
+            // deleteImage_button
+            // 
+            this.deleteImage_button.Location = new System.Drawing.Point(199, 598);
+            this.deleteImage_button.Name = "deleteImage_button";
+            this.deleteImage_button.Size = new System.Drawing.Size(75, 23);
+            this.deleteImage_button.TabIndex = 11;
+            this.deleteImage_button.Text = "CANCELLA";
+            this.deleteImage_button.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(696, 655);
+            this.ClientSize = new System.Drawing.Size(696, 663);
             this.Controls.Add(this.tabControl1);
             this.Name = "MainForm";
             this.Text = "NetScanImg";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
-            ((System.ComponentModel.ISupportInitialize)(this.testImmagine)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scanned_images_PictureBox)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
@@ -299,7 +332,7 @@
         #endregion
 
         private System.Windows.Forms.Button btn_test_connection;
-        private System.Windows.Forms.PictureBox testImmagine;
+        private System.Windows.Forms.PictureBox scanned_images_PictureBox;
         private System.Windows.Forms.Button btn_scan;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
@@ -319,5 +352,8 @@
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.ComboBox color_comboBox;
         private System.Windows.Forms.ComboBox dpi_comboBox;
+        private System.Windows.Forms.Button deleteImage_button;
+        private System.Windows.Forms.Button previousImage_button;
+        private System.Windows.Forms.Button nextImage_button;
     }
 }
