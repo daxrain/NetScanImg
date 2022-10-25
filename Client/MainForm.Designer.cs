@@ -33,6 +33,9 @@
             this.btn_scan = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.deleteImage_button = new System.Windows.Forms.Button();
+            this.previousImage_button = new System.Windows.Forms.Button();
+            this.nextImage_button = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -49,9 +52,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.server_ip_TextBox = new System.Windows.Forms.TextBox();
-            this.nextImage_button = new System.Windows.Forms.Button();
-            this.previousImage_button = new System.Windows.Forms.Button();
-            this.deleteImage_button = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.scanned_images_PictureBox)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -119,6 +119,36 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "SCANSIONE";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // deleteImage_button
+            // 
+            this.deleteImage_button.Location = new System.Drawing.Point(199, 598);
+            this.deleteImage_button.Name = "deleteImage_button";
+            this.deleteImage_button.Size = new System.Drawing.Size(75, 23);
+            this.deleteImage_button.TabIndex = 11;
+            this.deleteImage_button.Text = "CANCELLA";
+            this.deleteImage_button.UseVisualStyleBackColor = true;
+            this.deleteImage_button.Click += new System.EventHandler(this.deleteImage_button_Click);
+            // 
+            // previousImage_button
+            // 
+            this.previousImage_button.Location = new System.Drawing.Point(43, 598);
+            this.previousImage_button.Name = "previousImage_button";
+            this.previousImage_button.Size = new System.Drawing.Size(75, 23);
+            this.previousImage_button.TabIndex = 10;
+            this.previousImage_button.Text = "INDIETRO";
+            this.previousImage_button.UseVisualStyleBackColor = true;
+            this.previousImage_button.Click += new System.EventHandler(this.previousImage_button_Click);
+            // 
+            // nextImage_button
+            // 
+            this.nextImage_button.Location = new System.Drawing.Point(361, 598);
+            this.nextImage_button.Name = "nextImage_button";
+            this.nextImage_button.Size = new System.Drawing.Size(75, 23);
+            this.nextImage_button.TabIndex = 9;
+            this.nextImage_button.Text = "AVANTI";
+            this.nextImage_button.UseVisualStyleBackColor = true;
+            this.nextImage_button.Click += new System.EventHandler(this.nextImage_button_Click);
             // 
             // groupBox1
             // 
@@ -278,33 +308,6 @@
             this.server_ip_TextBox.Name = "server_ip_TextBox";
             this.server_ip_TextBox.Size = new System.Drawing.Size(155, 23);
             this.server_ip_TextBox.TabIndex = 1;
-            // 
-            // nextImage_button
-            // 
-            this.nextImage_button.Location = new System.Drawing.Point(361, 598);
-            this.nextImage_button.Name = "nextImage_button";
-            this.nextImage_button.Size = new System.Drawing.Size(75, 23);
-            this.nextImage_button.TabIndex = 9;
-            this.nextImage_button.Text = "AVANTI";
-            this.nextImage_button.UseVisualStyleBackColor = true;
-            // 
-            // previousImage_button
-            // 
-            this.previousImage_button.Location = new System.Drawing.Point(43, 598);
-            this.previousImage_button.Name = "previousImage_button";
-            this.previousImage_button.Size = new System.Drawing.Size(75, 23);
-            this.previousImage_button.TabIndex = 10;
-            this.previousImage_button.Text = "INDIETRO";
-            this.previousImage_button.UseVisualStyleBackColor = true;
-            // 
-            // deleteImage_button
-            // 
-            this.deleteImage_button.Location = new System.Drawing.Point(199, 598);
-            this.deleteImage_button.Name = "deleteImage_button";
-            this.deleteImage_button.Size = new System.Drawing.Size(75, 23);
-            this.deleteImage_button.TabIndex = 11;
-            this.deleteImage_button.Text = "CANCELLA";
-            this.deleteImage_button.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 

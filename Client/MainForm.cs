@@ -23,7 +23,7 @@ namespace Client
         private BinaryFormatter bf = new BinaryFormatter();
         private static Parameters param;
         private static List<Image> images = new List<Image>();
-
+        private static int list_images_selected_index = 0;
         public MainForm()
         {
             InitializeComponent();
@@ -97,6 +97,7 @@ namespace Client
                             if (scanned_img != null)
                             {
                                 images.Add(scanned_img);
+                                list_images_selected_index = images.Count - 1;
                                 scanned_images_PictureBox.Image = scanned_img;
                             }
                         });
@@ -178,6 +179,49 @@ namespace Client
             Thread.Sleep(1000);
             goingOn=true;
             startListener(default_port + 1);
+        }
+
+        private void deleteImage_button_Click(object sender, EventArgs e)
+        {
+            if(images.Count != 0)
+                images.RemoveAt(list_images_selected_index);
+
+            //Cancello in testa
+            if (list_images_selected_index < images.Count)
+            {
+                images.RemoveAt(list_images_selected_index);
+                if (list_images_selected_index == images.Count)
+                {
+                    scanned_images_PictureBox.Image = images[images.Count - 1];
+                    list_images_selected_index--;
+                }
+                else if (list_images_selected_index < images.Count && list_images_selected_index != 0)
+                {
+                    scanned_images_PictureBox.Image = images[list_images_selected_index];
+                }
+                else if (list_images_selected_index == 0)
+                {
+                    scanned_images_PictureBox = null;
+                }
+            }
+        }
+
+        private void previousImage_button_Click(object sender, EventArgs e)
+        {
+            if(list_images_selected_index>0 && list_images_selected_index<images.Count)
+            {
+                list_images_selected_index--;
+                scanned_images_PictureBox.Image=images[list_images_selected_index];
+            }
+        }
+
+        private void nextImage_button_Click(object sender, EventArgs e)
+        {
+            if (list_images_selected_index > 0 && list_images_selected_index < images.Count)
+            {
+                list_images_selected_index++;
+                scanned_images_PictureBox.Image = images[list_images_selected_index];
+            }
         }
     }
 }
