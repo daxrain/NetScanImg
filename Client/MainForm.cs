@@ -30,6 +30,9 @@ namespace Client
 
             dpi_comboBox.SelectedIndex = 0;
             color_comboBox.SelectedIndex = 0;
+            nextImage_button.Enabled = false;
+            deleteImage_button.Enabled = false;
+            previousImage_button.Enabled = false;
 
             if (File.Exists("param.xml"))
             {
@@ -99,6 +102,11 @@ namespace Client
                                 images.Add(scanned_img);
                                 list_images_selected_index = images.Count - 1;
                                 scanned_images_PictureBox.Image = scanned_img;
+                                if (list_images_selected_index != 0)
+                                {
+                                    previousImage_button.Enabled = true;
+                                    deleteImage_button.Enabled = true;
+                                }
                             }
                         });
                         //this.InvokeEx(f => f.scanned_images_PictureBox.Image = ((ScanResponse)resp).img);
@@ -183,26 +191,25 @@ namespace Client
 
         private void deleteImage_button_Click(object sender, EventArgs e)
         {
-            if(images.Count != 0)
-                images.RemoveAt(list_images_selected_index);
-
-            //Cancello in testa
-            if (list_images_selected_index < images.Count)
+            if (list_images_selected_index > 0)
             {
                 images.RemoveAt(list_images_selected_index);
-                if (list_images_selected_index == images.Count)
-                {
-                    scanned_images_PictureBox.Image = images[images.Count - 1];
+                if(list_images_selected_index == images.Count)
                     list_images_selected_index--;
-                }
-                else if (list_images_selected_index < images.Count && list_images_selected_index != 0)
+                scanned_images_PictureBox.Image = images[list_images_selected_index];
+            }
+            else if (list_images_selected_index == 0)
+            {
+                if (images.Count == 1)
                 {
+                    images.RemoveAt(list_images_selected_index);
+                    scanned_images_PictureBox.Image = null;
+                }
+                else if (images.Count != 0)
+                {
+                    images.RemoveAt(list_images_selected_index);
                     scanned_images_PictureBox.Image = images[list_images_selected_index];
-                }
-                else if (list_images_selected_index == 0)
-                {
-                    scanned_images_PictureBox = null;
-                }
+                }   
             }
         }
 
@@ -212,15 +219,26 @@ namespace Client
             {
                 list_images_selected_index--;
                 scanned_images_PictureBox.Image=images[list_images_selected_index];
+                nextImage_button.Enabled = true;
             }
         }
 
         private void nextImage_button_Click(object sender, EventArgs e)
         {
-            if (list_images_selected_index > 0 && list_images_selected_index < images.Count)
+            if (list_images_selected_index >= 0 && list_images_selected_index < images.Count)
             {
                 list_images_selected_index++;
-                scanned_images_PictureBox.Image = images[list_images_selected_index];
+                if(list_images_selected_index != images.Count)
+                    scanned_images_PictureBox.Image = images[list_images_selected_index];
+                else
+                {
+                    list_images_selected_index = images.Count - 1;
+                    scanned_images_PictureBox.Image = images[list_images_selected_index];
+                }
+            }
+            else 
+            {
+                nextImage_button.Enabled = false;
             }
         }
     }
