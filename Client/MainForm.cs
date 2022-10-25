@@ -24,6 +24,10 @@ namespace Client
         public MainForm()
         {
             InitializeComponent();
+
+            dpi_comboBox.SelectedIndex = 0;
+            color_comboBox.SelectedIndex = 0;
+
             if (File.Exists("param.xml"))
             {
                 param = Parameters.readFile("param.xml");
@@ -120,10 +124,17 @@ namespace Client
 
         private void btn_scan_Click(object sender, EventArgs e)
         {
-            send_request(new Request(request_type.SCAN, (Scanner) scanner_comboBox.SelectedItem));
+            Scanner device = (Scanner)scanner_comboBox.SelectedItem;
+            device.Options = new ScannerOptions();
+            device.Options.dpi = int.Parse((string)dpi_comboBox.SelectedItem);
+            device.Options.color_mode = color_comboBox.SelectedIndex;
+            device.Options.brightness = 0;
+            device.Options.contrast = 0;
+            
+            send_request(new Request(request_type.SCAN, device));
         }
 
-        private void send_request(Request scan_req)
+        private void send_request(Request req)
         {
             IPEndPoint ipep = new IPEndPoint(server_ip, default_port);
             TcpClient _tcpClient = new TcpClient();
@@ -131,7 +142,7 @@ namespace Client
             try
             {
                 _tcpClient.Connect(ipep);
-                formatter.Serialize(_tcpClient.GetStream(), scan_req);
+                formatter.Serialize(_tcpClient.GetStream(), req);
             }
             catch (Exception exc)
             {

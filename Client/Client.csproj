@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Protocol\Protocol.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\DataSources\" />
+  </ItemGroup>
+
 </Project>

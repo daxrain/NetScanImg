@@ -7,40 +7,45 @@ using WIA;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace Server
 {
     public class Scanner
     {
+        const string WIA_SCAN_COLOR_MODE = "6146";
+        const string WIA_HORIZONTAL_SCAN_RESOLUTION_DPI = "6147";
+        const string WIA_VERTICAL_SCAN_RESOLUTION_DPI = "6148";
+        const string WIA_HORIZONTAL_SCAN_START_PIXEL = "6149";
+        const string WIA_VERTICAL_SCAN_START_PIXEL = "6150";
+        const string WIA_HORIZONTAL_SCAN_SIZE_PIXELS = "6151";
+        const string WIA_VERTICAL_SCAN_SIZE_PIXELS = "6152";
+        const string WIA_SCAN_BRIGHTNESS_PERCENTS = "6154";
+        const string WIA_SCAN_CONTRAST_PERCENTS = "6155";
+        const string WIA_MANUFACTURER = "3";
+        const string WIA_DESCRIPTION = "4";
+        const string WIA_LAMP_WARM_UP_TIME = "6161";
+
         static DeviceManager deviceManager = new DeviceManager();
 
         public static List<Protocol.Scanner> scanner_list()
         {
             List<Protocol.Scanner> scanner_list = new List<Protocol.Scanner>();
-
-            foreach(DeviceInfo dev in deviceManager.DeviceInfos)
+            
+            foreach (DeviceInfo dev in deviceManager.DeviceInfos)
             {
                 if (dev.Type == WiaDeviceType.ScannerDeviceType)
                 {
-                    //Console.WriteLine("Device ID è: " + dev.DeviceID);
-                    string prop_manufacturer = (string)FindProperty(dev.Properties, (int)WiaProperty.Manufacturer).get_Value();
-                    string prop_desc = (string)FindProperty(dev.Properties, (int)WiaProperty.Description).get_Value();
+
+                    string prop_manufacturer = (string)GetWIAProperty(dev.Properties, WIA_MANUFACTURER);
+                    string prop_desc = (string)GetWIAProperty(dev.Properties, WIA_DESCRIPTION);
                     string scanner_name = prop_manufacturer + " - " + prop_desc;
-                    //Console.WriteLine("LO SCANNER E': " + scanner_name);
                     scanner_list.Add(new Protocol.Scanner(dev.DeviceID, scanner_name));
                 }
 
             }
 
             return scanner_list;
-        }
-
-        public static Property FindProperty(Properties properties, int propertyId)
-        {
-            foreach (Property property in properties)
-                if (property.PropertyID == propertyId)
-                    return property;
-            return null;
         }
 
         public static DeviceInfo getDevInfo(string devName)
@@ -54,17 +59,47 @@ namespace Server
             return null;
         }
 
-        public static Image scan(DeviceInfo dev)
+        public static Image scan(DeviceInfo dev, Protocol.ScannerOptions options)
         {
             ImageFile imageFile = null;
             try
-            { 
+            {
                 // Connect to the first available scanner
-                    Device device = dev.Connect();
+                Device device = dev.Connect();
                 // Select the scanner
                 Item scannerItem = device.Items[1];
-                
+
+                //AdjustScannerSettings(scannerItem, options.dpi, 0, 0, 2500, 3400, options.brightness, options.contrast, options.color_mode);
+                AdjustScannerSettings(scannerItem, options.dpi, 0, 0, 1250, 1700, options.brightness, options.contrast, options.color_mode);
+
                 imageFile = (ImageFile)scannerItem.Transfer(FormatID.wiaFormatBMP);
+            }
+            catch (COMException e)
+            {
+                // Convert the error code to UINT
+                uint errorCode = (uint)e.ErrorCode;
+
+                // See the error codes
+                if (errorCode == 0x80210006)
+                {
+                    Console.WriteLine("The scanner is busy or isn't ready");
+                }
+                else if (errorCode == 0x80210064)
+                {
+                    Console.WriteLine("The scanning process has been cancelled.");
+                }
+                else if (errorCode == 0x8021000C)
+                {
+                    Console.WriteLine("There is an incorrect setting on the WIA device.");
+                }
+                else if (errorCode == 0x80210005)
+                {
+                    Console.WriteLine("The device is offline. Make sure the device is powered on and connected to the PC.");
+                }
+                else if (errorCode == 0x80210001)
+                {
+                    Console.WriteLine("An unknown error has occurred with the WIA device.");
+                }
             }
             catch (Exception ex)
             {
@@ -101,6 +136,32 @@ namespace Server
             return result;
         }
 
+        private static void AdjustScannerSettings(IItem scannnerItem, int scanResolutionDPI, int scanStartLeftPixel, int scanStartTopPixel, int scanWidthPixels, int scanHeightPixels, int brightnessPercents, int contrastPercents, int colorMode)
+        {
+            SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_RESOLUTION_DPI, scanResolutionDPI);
+            SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_RESOLUTION_DPI, scanResolutionDPI);
+            SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_START_PIXEL, scanStartLeftPixel);
+            SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_START_PIXEL, scanStartTopPixel);
+            SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_SIZE_PIXELS, scanWidthPixels);
+            SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_SIZE_PIXELS, scanHeightPixels);
+            SetWIAProperty(scannnerItem.Properties, WIA_SCAN_BRIGHTNESS_PERCENTS, brightnessPercents);
+            SetWIAProperty(scannnerItem.Properties, WIA_SCAN_CONTRAST_PERCENTS, contrastPercents);
+            SetWIAProperty(scannnerItem.Properties, WIA_SCAN_COLOR_MODE, colorMode);
+        }
+
+        private static Object GetWIAProperty(IProperties properties, object propName)
+        {
+            Property prop = properties.get_Item(ref propName);
+            return prop.get_Value();
+        }
+
+        private static void SetWIAProperty(IProperties properties, object propName, object propValue)
+        {
+            Property prop = properties.get_Item(ref propName);
+            prop.set_Value(ref propValue);
+        }
+        
+        /*
         public enum WiaProperty
         {
             DeviceId = 2,
@@ -217,6 +278,6 @@ namespace Server
             Threshold = 6159,
             Invert = 6160,
             LampWarmUpTime = 6161,
-        }
+        }*/
     }
 }

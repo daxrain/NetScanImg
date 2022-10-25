@@ -120,7 +120,7 @@ namespace Server
                         {
                             Thread thread = new Thread(
                                 () =>
-                                    scannedImage = Scanner.scan(Scanner.getDevInfo(scan_req.Device.ID))
+                                    scannedImage = Scanner.scan(Scanner.getDevInfo(scan_req.Device.ID), scan_req.Device.Options)
                                 );
                             thread.Start();
                             thread.Join();

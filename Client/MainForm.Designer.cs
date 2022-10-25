@@ -33,6 +33,15 @@
             this.btn_scan = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.trackBar2 = new System.Windows.Forms.TrackBar();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.color_comboBox = new System.Windows.Forms.ComboBox();
+            this.dpi_comboBox = new System.Windows.Forms.ComboBox();
             this.scanner_comboBox = new System.Windows.Forms.ComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btn_save_conf = new System.Windows.Forms.Button();
@@ -43,6 +52,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.testImmagine)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -90,6 +102,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.scanner_comboBox);
             this.tabPage1.Controls.Add(this.testImmagine);
             this.tabPage1.Controls.Add(this.btn_scan);
@@ -100,6 +113,99 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "SCANSIONE";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label6);
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.trackBar2);
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.trackBar1);
+            this.groupBox1.Controls.Add(this.color_comboBox);
+            this.groupBox1.Controls.Add(this.dpi_comboBox);
+            this.groupBox1.Location = new System.Drawing.Point(466, 58);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(200, 329);
+            this.groupBox1.TabIndex = 8;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Opzioni";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(72, 235);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(59, 15);
+            this.label6.TabIndex = 10;
+            this.label6.Text = "Contrasto";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(65, 152);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(66, 15);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "Luminosità";
+            // 
+            // trackBar2
+            // 
+            this.trackBar2.Location = new System.Drawing.Point(26, 253);
+            this.trackBar2.Name = "trackBar2";
+            this.trackBar2.Size = new System.Drawing.Size(146, 45);
+            this.trackBar2.TabIndex = 5;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(52, 95);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(90, 15);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "Modalità colore";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(52, 34);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(88, 15);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Risoluzione DPI";
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.Location = new System.Drawing.Point(26, 170);
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(146, 45);
+            this.trackBar1.TabIndex = 4;
+            // 
+            // color_comboBox
+            // 
+            this.color_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.color_comboBox.FormattingEnabled = true;
+            this.color_comboBox.Items.AddRange(new object[] {
+            "Bianco e Nero",
+            "Colori",
+            "Scala di Grigi"});
+            this.color_comboBox.Location = new System.Drawing.Point(26, 113);
+            this.color_comboBox.Name = "color_comboBox";
+            this.color_comboBox.Size = new System.Drawing.Size(146, 23);
+            this.color_comboBox.TabIndex = 7;
+            // 
+            // dpi_comboBox
+            // 
+            this.dpi_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.dpi_comboBox.FormattingEnabled = true;
+            this.dpi_comboBox.Items.AddRange(new object[] {
+            "150",
+            "300",
+            "600"});
+            this.dpi_comboBox.Location = new System.Drawing.Point(26, 52);
+            this.dpi_comboBox.Name = "dpi_comboBox";
+            this.dpi_comboBox.Size = new System.Drawing.Size(146, 23);
+            this.dpi_comboBox.TabIndex = 6;
             // 
             // scanner_comboBox
             // 
@@ -180,6 +286,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.testImmagine)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
@@ -200,5 +310,14 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox server_ip_TextBox;
         private System.Windows.Forms.ComboBox scanner_comboBox;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TrackBar trackBar2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.ComboBox color_comboBox;
+        private System.Windows.Forms.ComboBox dpi_comboBox;
     }
 }
