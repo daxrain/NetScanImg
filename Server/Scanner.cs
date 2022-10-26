@@ -87,27 +87,33 @@ namespace Server
                 if (errorCode == 0x80210006)
                 {
                     Console.WriteLine("The scanner is busy or isn't ready");
+                    NetScanImageServer.txt_logger.write_log("The scanner is busy or isn't ready");
                 }
                 else if (errorCode == 0x80210064)
                 {
                     Console.WriteLine("The scanning process has been cancelled.");
+                    NetScanImageServer.txt_logger.write_log("The scanning process has been cancelled.");
                 }
                 else if (errorCode == 0x8021000C)
                 {
                     Console.WriteLine("There is an incorrect setting on the WIA device.");
+                    NetScanImageServer.txt_logger.write_log("There is an incorrect setting on the WIA device.");
                 }
                 else if (errorCode == 0x80210005)
                 {
                     Console.WriteLine("The device is offline. Make sure the device is powered on and connected to the PC.");
+                    NetScanImageServer.txt_logger.write_log("The device is offline. Make sure the device is powered on and connected to the PC.");
                 }
                 else if (errorCode == 0x80210001)
                 {
                     Console.WriteLine("An unknown error has occurred with the WIA device.");
+                    NetScanImageServer.txt_logger.write_log("An unknown error has occurred with the WIA device.");
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Errore SCANNER non pronto\n" + ex.ToString());
+                NetScanImageServer.txt_logger.write_log("Errore SCANNER non pronto\n" + ex.ToString());
             }
 
             if(imageFile!=null)

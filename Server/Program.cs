@@ -24,21 +24,28 @@ namespace Server
         static void Main(string[] args)
         {
             init_server();
-            Thread th = startListener(param.default_port); 
-            int res = 0;
-            do
+            try
             {
-                Console.WriteLine("PRESS 1 INVIO FOR EXIT...");
-                try
+                Thread th = startListener(param.default_port);
+                int res = 0;
+                do
                 {
-                    res = int.Parse(Console.ReadLine());
+                    Console.WriteLine("PRESS 1 INVIO FOR EXIT...");
+                    try
+                    {
+                        res = int.Parse(Console.ReadLine());
+                    }
+                    catch (System.FormatException ex)
+                    {
+                        //Console.WriteLine("PRESS 1 INVIO FOR EXIT...");
+                    }
                 }
-                catch(System.FormatException ex)
-                {
-                    //Console.WriteLine("PRESS 1 INVIO FOR EXIT...");
-                }
+                while (res != 1);
             }
-            while (res != 1);
+            catch(Exception ex)
+            {
+                txt_logger.write_log(ex.ToString());
+            }
             close_server();
             Console.ReadLine();
         }
@@ -67,7 +74,6 @@ namespace Server
         {
             goingOn = false;
             _server.Stop();
-            txt_logger.log_file.Close();
             //th.Interrupt();
         }
 
@@ -98,6 +104,7 @@ namespace Server
                 catch (SocketException ex)
                 {
                     Console.WriteLine("Chiusura imprevista Socket");
+                    txt_logger.write_log("Chiusura imprevista Socket");
                 }
                     
             }
@@ -118,13 +125,15 @@ namespace Server
                         _tcpClient.Connect(remote_client);
                         formatter.Serialize(_tcpClient.GetStream(), new EmptyResponse());
                         _tcpClient.Close();
-                        Console.WriteLine("MESSAGGIO VUOTO");
+                        Console.WriteLine("INVIO MESSAGGIO VUOTO");
+                        txt_logger.write_log("INVIO MESSAGGIO VUOTO");
                         break;
                     case request_type.LIST:
                         _tcpClient.Connect(remote_client);
                         formatter.Serialize(_tcpClient.GetStream(), new ListResponse(Scanner.scanner_list()));
                         _tcpClient.Close();
-                        Console.WriteLine("MESSAGGIO LIST");
+                        Console.WriteLine("INVIO MESSAGGIO LIST");
+                        txt_logger.write_log("INVIO MESSAGGIO LIST");
                         break;
                     case request_type.SCAN:
                         Image scannedImage = null;
@@ -144,6 +153,7 @@ namespace Server
                             _tcpClient.Close();
                             thread.Interrupt();
                             Console.WriteLine("INVIO IMMAGINE");
+                            txt_logger.write_log("INVIO IMMAGINE");
                         }
                         break;
                 }
@@ -151,6 +161,7 @@ namespace Server
             catch (Exception exc)
             {
                 Console.WriteLine("IMPOSSIBILE CONNETTERSI\n" + exc.ToString());
+                txt_logger.write_log("IMPOSSIBILE CONNETTERSI\n" + exc.ToString());
             }
         }
     }
