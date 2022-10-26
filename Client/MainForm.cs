@@ -8,16 +8,10 @@ using System.Runtime.Serialization;
 using Protocol.MyMessages;
 using Protocol;
 using System.IO;
-using System.Drawing;
-using System.Collections;
 using System.Collections.Generic;
 using iText.IO.Image;
-using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Action;
-using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Layout;
-using iText.Layout.Element;
 using iText.Layout.Properties;
 using System.Drawing.Imaging;
 
@@ -156,8 +150,8 @@ namespace Client
             device.Options = new ScannerOptions();
             device.Options.dpi = int.Parse((string)dpi_comboBox.SelectedItem);
             device.Options.color_mode = color_comboBox.SelectedIndex;
-            device.Options.brightness = 0;
-            device.Options.contrast = 0;
+            device.Options.brightness = brightness_TrackBar.Value;
+            device.Options.contrast = contrast_TrackBar.Value;
             
             send_request(new Request(request_type.SCAN, device));
         }

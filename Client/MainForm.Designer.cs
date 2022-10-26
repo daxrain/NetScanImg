@@ -43,10 +43,10 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.trackBar2 = new System.Windows.Forms.TrackBar();
+            this.contrast_TrackBar = new System.Windows.Forms.TrackBar();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.brightness_TrackBar = new System.Windows.Forms.TrackBar();
             this.color_comboBox = new System.Windows.Forms.ComboBox();
             this.dpi_comboBox = new System.Windows.Forms.ComboBox();
             this.scanner_comboBox = new System.Windows.Forms.ComboBox();
@@ -65,8 +65,8 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.contrast_TrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.brightness_TrackBar)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -207,10 +207,10 @@
             // 
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.trackBar2);
+            this.groupBox1.Controls.Add(this.contrast_TrackBar);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.trackBar1);
+            this.groupBox1.Controls.Add(this.brightness_TrackBar);
             this.groupBox1.Controls.Add(this.color_comboBox);
             this.groupBox1.Controls.Add(this.dpi_comboBox);
             this.groupBox1.Location = new System.Drawing.Point(466, 58);
@@ -238,12 +238,17 @@
             this.label5.TabIndex = 9;
             this.label5.Text = "Luminosità";
             // 
-            // trackBar2
+            // contrast_TrackBar
             // 
-            this.trackBar2.Location = new System.Drawing.Point(26, 253);
-            this.trackBar2.Name = "trackBar2";
-            this.trackBar2.Size = new System.Drawing.Size(146, 45);
-            this.trackBar2.TabIndex = 5;
+            this.contrast_TrackBar.LargeChange = 200;
+            this.contrast_TrackBar.Location = new System.Drawing.Point(26, 253);
+            this.contrast_TrackBar.Maximum = 1000;
+            this.contrast_TrackBar.Minimum = -1000;
+            this.contrast_TrackBar.Name = "contrast_TrackBar";
+            this.contrast_TrackBar.Size = new System.Drawing.Size(146, 45);
+            this.contrast_TrackBar.SmallChange = 100;
+            this.contrast_TrackBar.TabIndex = 5;
+            this.contrast_TrackBar.TickFrequency = 100;
             // 
             // label4
             // 
@@ -263,12 +268,17 @@
             this.label3.TabIndex = 7;
             this.label3.Text = "Risoluzione DPI";
             // 
-            // trackBar1
+            // brightness_TrackBar
             // 
-            this.trackBar1.Location = new System.Drawing.Point(26, 170);
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(146, 45);
-            this.trackBar1.TabIndex = 4;
+            this.brightness_TrackBar.LargeChange = 200;
+            this.brightness_TrackBar.Location = new System.Drawing.Point(26, 170);
+            this.brightness_TrackBar.Maximum = 1000;
+            this.brightness_TrackBar.Minimum = -1000;
+            this.brightness_TrackBar.Name = "brightness_TrackBar";
+            this.brightness_TrackBar.Size = new System.Drawing.Size(146, 45);
+            this.brightness_TrackBar.SmallChange = 100;
+            this.brightness_TrackBar.TabIndex = 4;
+            this.brightness_TrackBar.TickFrequency = 100;
             // 
             // color_comboBox
             // 
@@ -406,8 +416,8 @@
             this.tabPage1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.contrast_TrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.brightness_TrackBar)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
@@ -431,10 +441,10 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TrackBar trackBar2;
+        private System.Windows.Forms.TrackBar contrast_TrackBar;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.TrackBar brightness_TrackBar;
         private System.Windows.Forms.ComboBox color_comboBox;
         private System.Windows.Forms.ComboBox dpi_comboBox;
         private System.Windows.Forms.Button deleteImage_button;
