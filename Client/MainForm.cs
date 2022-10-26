@@ -14,6 +14,8 @@ using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Properties;
 using System.Drawing.Imaging;
+using System.Drawing.Drawing2D;
+using System.Drawing;
 
 namespace Client
 {
@@ -27,6 +29,10 @@ namespace Client
         private static Parameters param;
         private static List<System.Drawing.Image> images = new List<System.Drawing.Image>();
         private static int list_images_selected_index = 0;
+        private bool _selecting;
+        private Rectangle _selection;
+        private Image _originalImage;
+
         public MainForm()
         {
             InitializeComponent();
@@ -356,6 +362,151 @@ namespace Client
                         MessageBox.Show("Impossibile salvare il file:\n" + filename);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Fits an image to the size of a picturebox
+        /// </summary>
+        /// <param name="image">
+        /// image to be fit
+        /// </param>
+        /// <param name="picBox">
+        /// picturebox in that the image should fit
+        /// </param>
+        /// <returns>
+        /// fitted image
+        /// </returns>
+        /// <remarks>
+        /// Although the picturebox has the SizeMode-property that offers
+        /// the same functionality an OutOfMemory-Exception is thrown
+        /// when assigning images to a picturebox several times.
+        /// 
+        /// AFAIK the SizeMode is designed for assigning an image to
+        /// picturebox only once.
+        /// </remarks>
+        public static Image Fit2PictureBox(Image image, PictureBox picBox)
+        {
+            Bitmap bmp = null;
+            Graphics g;
+            if (image != null)
+            {
+                // Scale:
+                double scaleY = (double)image.Width / picBox.Width;
+                double scaleX = (double)image.Height / picBox.Height;
+                double scale = scaleY < scaleX ? scaleX : scaleY;
+
+                // Create new bitmap:
+                bmp = new Bitmap(
+                    (int)((double)image.Width / scale),
+                    (int)((double)image.Height / scale));
+
+                // Set resolution of the new image:
+                bmp.SetResolution(
+                    image.HorizontalResolution,
+                    image.VerticalResolution);
+
+                // Create graphics:
+                g = Graphics.FromImage(bmp);
+
+                // Set interpolation mode:
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+                // Draw the new image:
+                g.DrawImage(
+                    image,
+                    new Rectangle(            // Destination
+                        0, 0,
+                        bmp.Width, bmp.Height),
+                    new Rectangle(            // Source
+                        0, 0,
+                        image.Width, image.Height),
+                    GraphicsUnit.Pixel);
+
+                // Release the resources of the graphics:
+                g.Dispose();
+
+                // Release the resources of the origin image:
+                image.Dispose();
+            }
+
+            return bmp;
+        }
+
+        private void scanned_images_PictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Starting point of the selection:
+            if (e.Button == MouseButtons.Left)
+            {
+                _selecting = true;
+                _selection = new Rectangle(new Point(e.X, e.Y), new Size());
+            }
+        }
+
+        private void scanned_images_PictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Update the actual size of the selection:
+            if (_selecting)
+            {
+                _selection.Width = e.X - _selection.X;
+                _selection.Height = e.Y - _selection.Y;
+
+                // Redraw the picturebox:
+                scanned_images_PictureBox.Refresh();
+            }
+        }
+
+        private void scanned_images_PictureBox_Paint(object sender, PaintEventArgs e)
+        {
+            if (_selecting)
+            {
+                // Draw a rectangle displaying the current selection
+                Pen pen = Pens.Red;
+                e.Graphics.DrawRectangle(pen, _selection);
+            }
+        }
+
+        
+        private void scanned_images_PictureBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && _selecting && _selection.Size != new Size() && images.Count > 0)
+            {
+                _originalImage = scanned_images_PictureBox.Image;
+                // Create cropped image:
+                Image img = Crop(scanned_images_PictureBox.Image, _selection);
+
+                // Fit image to the picturebox:
+                scanned_images_PictureBox.Image = Fit2PictureBox(img, scanned_images_PictureBox);
+                images[list_images_selected_index].Dispose();
+                images[list_images_selected_index] = scanned_images_PictureBox.Image;
+                _selecting = false;
+            }
+            else
+                _selecting = false;
+        }
+
+        public static Image Crop(Image image, Rectangle selection)
+        {
+            Bitmap bmp = image as Bitmap;
+            Bitmap cropBmp = null;
+            // Check if it is a bitmap:
+            if (bmp != null)
+            {
+                cropBmp = bmp.Clone(selection, bmp.PixelFormat);
+
+                // Release the resources:
+                image.Dispose();
+            }
+
+            return cropBmp;
+        }
+
+        private void cancel_crop_button_Click(object sender, EventArgs e)
+        {
+            scanned_images_PictureBox.Image = _originalImage;
+            if(images.Count >0)
+            {
+                images[list_images_selected_index] = _originalImage;
             }
         }
     }
