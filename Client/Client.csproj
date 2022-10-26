@@ -14,4 +14,8 @@
     <Folder Include="Properties\DataSources\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="itext7" Version="7.2.4" />
+  </ItemGroup>
+
 </Project>

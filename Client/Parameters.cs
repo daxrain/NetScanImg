@@ -15,6 +15,7 @@ namespace Client
     {
         public string server_addr;
         public int server_port;
+        public string default_save_path;
 
         public Parameters()
         {

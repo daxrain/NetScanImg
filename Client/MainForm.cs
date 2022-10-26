@@ -11,6 +11,15 @@ using System.IO;
 using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
+using iText.IO.Image;
+using iText.Kernel.Colors;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Canvas.Draw;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using System.Drawing.Imaging;
 
 namespace Client
 {
@@ -22,18 +31,11 @@ namespace Client
         private static bool goingOn = true;
         private BinaryFormatter bf = new BinaryFormatter();
         private static Parameters param;
-        private static List<Image> images = new List<Image>();
+        private static List<System.Drawing.Image> images = new List<System.Drawing.Image>();
         private static int list_images_selected_index = 0;
         public MainForm()
         {
             InitializeComponent();
-
-            dpi_comboBox.SelectedIndex = 0;
-            color_comboBox.SelectedIndex = 0;
-            nextImage_button.Enabled = false;
-            deleteImage_button.Enabled = false;
-            previousImage_button.Enabled = false;
-
             if (File.Exists("param.xml"))
             {
                 param = Parameters.readFile("param.xml");
@@ -43,6 +45,14 @@ namespace Client
                 param = new Parameters();
                 Parameters.SaveFile(param, "param.xml");
             }
+
+            //Set graphical elements
+            dpi_comboBox.SelectedIndex = 0;
+            color_comboBox.SelectedIndex = 0;
+            nextImage_button.Enabled = false;
+            deleteImage_button.Enabled = false;
+            previousImage_button.Enabled = false;
+            default_save_path_textBox.Text = param.default_save_path;
 
             server_ip = IPAddress.Parse(param.server_addr);
             default_port = param.server_port;
@@ -96,7 +106,7 @@ namespace Client
                     {
                         this.Invoke((MethodInvoker)delegate ()
                         {
-                            Image scanned_img = ((ScanResponse)resp).img;
+                            System.Drawing.Image scanned_img = ((ScanResponse)resp).img;
                             if (scanned_img != null)
                             {
                                 images.Add(scanned_img);
@@ -236,9 +246,122 @@ namespace Client
                     scanned_images_PictureBox.Image = images[list_images_selected_index];
                 }
             }
-            else 
+        }
+
+        private void open_path_button_Click(object sender, EventArgs e)
+        {
+            folderBrowserDialog.Description = "Apri percorso salvataggio di default";
+
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
-                nextImage_button.Enabled = false;
+                param.default_save_path=folderBrowserDialog.SelectedPath;
+                default_save_path_textBox.Text = param.default_save_path;
+            }
+        }
+
+        private void save_pdf_button_Click(object sender, EventArgs e)
+        {
+            if (images.Count > 0)
+            {
+                string filename = param.default_save_path + "\\" + DateTime.Now.ToString("ddMMyyyy_HHmmssff") + ".pdf";
+                create_pdf(filename);
+            }
+        }
+
+        private void create_pdf(string filename)
+        {
+            try
+            {
+                PdfWriter writer = new PdfWriter(filename);
+                PdfDocument pdf = new PdfDocument(writer);
+                Document document = new Document(pdf);
+
+                foreach (System.Drawing.Image img in images)
+                {
+                    ImageData img_Data = ImageDataFactory.Create(ImageToByteArray(img));
+                    iText.Layout.Element.Image itext_img = new iText.Layout.Element.Image(img_Data);
+                    itext_img.SetTextAlignment(TextAlignment.CENTER);
+                    document.Add(itext_img);
+                }
+
+                document.Close();
+                MessageBox.Show("Documento salvato in:\n" + filename);
+            }
+            catch (System.IO.DirectoryNotFoundException ex)
+            {
+                MessageBox.Show("Impossibile trovare la cartella per i salvataggi di default:\n " + param.default_save_path);
+            }
+        }
+
+        private byte[] ImageToByteArray(System.Drawing.Image imageIn)
+        {
+            using (var ms = new MemoryStream())
+            {
+                imageIn.Save(ms, imageIn.RawFormat);
+                return ms.ToArray();
+            }
+        }
+
+        private void save_image_button_Click(object sender, EventArgs e)
+        {
+            if(images.Count > 0)
+            {
+                string filename = param.default_save_path + "\\" + DateTime.Now.ToString("ddMMyyyy_HHmmssff") + ".jpg";
+                
+            }
+        }
+
+        private void create_jpg(string filename)
+        {
+            try
+            {
+                images[list_images_selected_index].Save(filename, ImageFormat.Jpeg);
+                MessageBox.Show("Documento salvato in:\n" + filename);
+            }
+            catch (System.IO.DirectoryNotFoundException ex)
+            {
+                MessageBox.Show("Impossibile trovare la cartella per i salvataggi di default:\n " + param.default_save_path);
+            }
+        }
+
+        private void clear_button_Click(object sender, EventArgs e)
+        {
+            images.Clear();
+            list_images_selected_index = 0;
+            scanned_images_PictureBox.Image = null;
+            nextImage_button.Enabled = false;
+            previousImage_button.Enabled =false;
+            deleteImage_button.Enabled = false;
+        }
+
+        private void saveas_button_Click(object sender, EventArgs e)
+        {
+            if (images.Count > 0)
+            {
+                saveFileDialog.Title = "Salva immagine con nome";
+                saveFileDialog.Filter = "File (*.jpg;*.pdf)|*.jpg;*.pdf|Tutti (*.*)|*.*";
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filename = saveFileDialog.FileName;
+                    string ext = Path.GetExtension(filename);
+
+                    try
+                    {
+                        switch (ext)
+                        {
+                            case ".pdf":
+                                create_pdf(filename);
+                                break;
+                            case ".jpg":
+                                create_jpg(filename);
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Impossibile salvare il file:\n" + filename);
+                    }
+                }
             }
         }
     }

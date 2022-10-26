@@ -10,3 +10,4 @@ https://ourcodeworld.com/articles/read/382/creating-a-scanning-application-in-wi
 https://www.c-sharpcorner.com/article/create-windows-services-in-c-sharp/
 https://www.cyotek.com/blog/an-introduction-to-using-windows-image-acquisition-wia-via-csharp
 https://social.msdn.microsoft.com/Forums/windows/en-US/2d5a6fbf-f1ba-44a3-a957-e76dd2800262/interopwia-version10-unable-to-set-wiapageauto-property?forum=csharpgeneral
+https://bjdejongblog.nl/scanning-an-image-wth-csharp/

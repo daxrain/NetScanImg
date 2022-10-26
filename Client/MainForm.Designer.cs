@@ -33,6 +33,10 @@
             this.btn_scan = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.clear_button = new System.Windows.Forms.Button();
+            this.save_image_button = new System.Windows.Forms.Button();
+            this.saveas_button = new System.Windows.Forms.Button();
+            this.save_pdf_button = new System.Windows.Forms.Button();
             this.deleteImage_button = new System.Windows.Forms.Button();
             this.previousImage_button = new System.Windows.Forms.Button();
             this.nextImage_button = new System.Windows.Forms.Button();
@@ -47,11 +51,16 @@
             this.dpi_comboBox = new System.Windows.Forms.ComboBox();
             this.scanner_comboBox = new System.Windows.Forms.ComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.open_path_button = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.default_save_path_textBox = new System.Windows.Forms.TextBox();
             this.btn_save_conf = new System.Windows.Forms.Button();
             this.server_port_TextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.server_ip_TextBox = new System.Windows.Forms.TextBox();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             ((System.ComponentModel.ISupportInitialize)(this.scanned_images_PictureBox)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -105,6 +114,10 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.clear_button);
+            this.tabPage1.Controls.Add(this.save_image_button);
+            this.tabPage1.Controls.Add(this.saveas_button);
+            this.tabPage1.Controls.Add(this.save_pdf_button);
             this.tabPage1.Controls.Add(this.deleteImage_button);
             this.tabPage1.Controls.Add(this.previousImage_button);
             this.tabPage1.Controls.Add(this.nextImage_button);
@@ -119,6 +132,46 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "SCANSIONE";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // clear_button
+            // 
+            this.clear_button.Location = new System.Drawing.Point(522, 598);
+            this.clear_button.Name = "clear_button";
+            this.clear_button.Size = new System.Drawing.Size(75, 23);
+            this.clear_button.TabIndex = 15;
+            this.clear_button.Text = "PULISCI";
+            this.clear_button.UseVisualStyleBackColor = true;
+            this.clear_button.Click += new System.EventHandler(this.clear_button_Click);
+            // 
+            // save_image_button
+            // 
+            this.save_image_button.Location = new System.Drawing.Point(504, 409);
+            this.save_image_button.Name = "save_image_button";
+            this.save_image_button.Size = new System.Drawing.Size(123, 23);
+            this.save_image_button.TabIndex = 14;
+            this.save_image_button.Text = "Salva Immagine";
+            this.save_image_button.UseVisualStyleBackColor = true;
+            this.save_image_button.Click += new System.EventHandler(this.save_image_button_Click);
+            // 
+            // saveas_button
+            // 
+            this.saveas_button.Location = new System.Drawing.Point(504, 492);
+            this.saveas_button.Name = "saveas_button";
+            this.saveas_button.Size = new System.Drawing.Size(123, 23);
+            this.saveas_button.TabIndex = 13;
+            this.saveas_button.Text = "Salva Come";
+            this.saveas_button.UseVisualStyleBackColor = true;
+            this.saveas_button.Click += new System.EventHandler(this.saveas_button_Click);
+            // 
+            // save_pdf_button
+            // 
+            this.save_pdf_button.Location = new System.Drawing.Point(504, 450);
+            this.save_pdf_button.Name = "save_pdf_button";
+            this.save_pdf_button.Size = new System.Drawing.Size(123, 23);
+            this.save_pdf_button.TabIndex = 12;
+            this.save_pdf_button.Text = "Salva PDF";
+            this.save_pdf_button.UseVisualStyleBackColor = true;
+            this.save_pdf_button.Click += new System.EventHandler(this.save_pdf_button_Click);
             // 
             // deleteImage_button
             // 
@@ -253,6 +306,9 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.open_path_button);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.default_save_path_textBox);
             this.tabPage2.Controls.Add(this.btn_save_conf);
             this.tabPage2.Controls.Add(this.server_port_TextBox);
             this.tabPage2.Controls.Add(this.label2);
@@ -267,11 +323,37 @@
             this.tabPage2.Text = "IMPOSTAZIONI";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // open_path_button
+            // 
+            this.open_path_button.Location = new System.Drawing.Point(496, 112);
+            this.open_path_button.Name = "open_path_button";
+            this.open_path_button.Size = new System.Drawing.Size(107, 23);
+            this.open_path_button.TabIndex = 8;
+            this.open_path_button.Text = "Apri Percorso";
+            this.open_path_button.UseVisualStyleBackColor = true;
+            this.open_path_button.Click += new System.EventHandler(this.open_path_button_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(33, 95);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(162, 15);
+            this.label7.TabIndex = 7;
+            this.label7.Text = "Percorso salvataggi di default";
+            // 
+            // default_save_path_textBox
+            // 
+            this.default_save_path_textBox.Location = new System.Drawing.Point(29, 113);
+            this.default_save_path_textBox.Name = "default_save_path_textBox";
+            this.default_save_path_textBox.Size = new System.Drawing.Size(432, 23);
+            this.default_save_path_textBox.TabIndex = 6;
+            // 
             // btn_save_conf
             // 
-            this.btn_save_conf.Location = new System.Drawing.Point(33, 95);
+            this.btn_save_conf.Location = new System.Drawing.Point(29, 155);
             this.btn_save_conf.Name = "btn_save_conf";
-            this.btn_save_conf.Size = new System.Drawing.Size(75, 23);
+            this.btn_save_conf.Size = new System.Drawing.Size(181, 23);
             this.btn_save_conf.TabIndex = 5;
             this.btn_save_conf.Text = "SALVA CONFIGURAZIONE";
             this.btn_save_conf.UseVisualStyleBackColor = true;
@@ -358,5 +440,14 @@
         private System.Windows.Forms.Button deleteImage_button;
         private System.Windows.Forms.Button previousImage_button;
         private System.Windows.Forms.Button nextImage_button;
+        private System.Windows.Forms.Button saveas_button;
+        private System.Windows.Forms.Button save_pdf_button;
+        private System.Windows.Forms.Button open_path_button;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox default_save_path_textBox;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+        private System.Windows.Forms.Button save_image_button;
+        private System.Windows.Forms.Button clear_button;
     }
 }
