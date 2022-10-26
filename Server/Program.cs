@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
 using System.Xml.Serialization;
+using System.ComponentModel.Design;
 
 namespace Server
 {
@@ -18,9 +19,11 @@ namespace Server
         public static TcpListener _server;
         public static bool goingOn = true;
         public static Parameters param;
+        public static Logger txt_logger;
+
         static void Main(string[] args)
         {
-            init();
+            init_server();
             Thread th = startListener(param.default_port); 
             int res = 0;
             do
@@ -36,13 +39,11 @@ namespace Server
                 }
             }
             while (res != 1);
-            goingOn = false;
-            _server.Stop();
-            //th.Interrupt();
+            close_server();
             Console.ReadLine();
         }
 
-        public static void init()
+        public static void init_server()
         {
             XmlSerializer xs = new XmlSerializer(typeof(Parameters));
             if (File.Exists("param.xml"))
@@ -58,11 +59,22 @@ namespace Server
                 xs.Serialize(txtWriter, param);
                 txtWriter.Close();
             }
+
+            txt_logger = new Logger(param.filename);
+        }
+
+        public static void close_server()
+        {
+            goingOn = false;
+            _server.Stop();
+            txt_logger.log_file.Close();
+            //th.Interrupt();
         }
 
         public static Thread startListener(int port)
         {
             Console.WriteLine("Server in ascolto nella porta: " + port);
+            txt_logger.write_log("Server in ascolto nella porta: " + port);
             _server = new TcpListener(IPAddress.Any, port);
             _server.Start();
             

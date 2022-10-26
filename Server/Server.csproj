@@ -71,6 +71,7 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logger.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="Parameters.cs" />
     <Compile Include="Program.cs" />

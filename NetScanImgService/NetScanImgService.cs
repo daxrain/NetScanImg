@@ -23,14 +23,13 @@ namespace NetScanImgService
 
         protected override void OnStart(string[] args)
         {
-            NetScanImageServer.init();
+            NetScanImageServer.init_server();
             NetScanImageServer.startListener(NetScanImageServer.param.default_port);
         }
 
         protected override void OnStop()
         {
-            NetScanImageServer.goingOn = false;
-            NetScanImageServer._server.Stop();
+            NetScanImageServer.close_server();
         }
     }
 }
