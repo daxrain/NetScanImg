@@ -26,6 +26,10 @@ namespace Server
         const string WIA_MANUFACTURER = "3";
         const string WIA_DESCRIPTION = "4";
         const string WIA_LAMP_WARM_UP_TIME = "6161";
+        const int widthA4at300dpi = 2480;
+        const int heightA4at300dpi = 3508;
+        const int widthA4at600dpi = 4960;
+        const int heightA4at600dpi = 7016;
 
         static DeviceManager deviceManager = new DeviceManager();
 
@@ -70,7 +74,6 @@ namespace Server
                 // Select the scanner
                 Item scannerItem = device.Items[1];
 
-                //AdjustScannerSettings(scannerItem, options.dpi, 0, 0, 2500, 3400, options.brightness, options.contrast, options.color_mode);
                 AdjustScannerSettings(scannerItem, options.dpi, 0, 0, 1250, 1700, options.brightness, options.contrast, options.color_mode);
 
                 imageFile = (ImageFile)scannerItem.Transfer(FormatID.wiaFormatBMP);
@@ -139,12 +142,39 @@ namespace Server
 
         private static void AdjustScannerSettings(IItem scannnerItem, int scanResolutionDPI, int scanStartLeftPixel, int scanStartTopPixel, int scanWidthPixels, int scanHeightPixels, int brightnessPercents, int contrastPercents, int colorMode)
         {
-            SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_RESOLUTION_DPI, scanResolutionDPI);
-            SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_RESOLUTION_DPI, scanResolutionDPI);
-            SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_START_PIXEL, scanStartLeftPixel);
-            SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_START_PIXEL, scanStartTopPixel);
-            SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_SIZE_PIXELS, scanWidthPixels);
-            SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_SIZE_PIXELS, scanHeightPixels);
+            int width;
+            int height;
+            switch (scanResolutionDPI)
+            {
+                case 150:
+                    SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_RESOLUTION_DPI, scanResolutionDPI);
+                    SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_RESOLUTION_DPI, scanResolutionDPI);
+                    SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_START_PIXEL, scanStartLeftPixel);
+                    SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_START_PIXEL, scanStartTopPixel);
+                    SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_SIZE_PIXELS, scanWidthPixels);
+                    SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_SIZE_PIXELS, scanHeightPixels);
+                    break;
+                case 300:
+                    width = (int)((widthA4at300dpi / 300.0) * scanResolutionDPI);
+                    height = (int)((heightA4at300dpi / 300.0) * scanResolutionDPI);
+                    SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_RESOLUTION_DPI, scanResolutionDPI);
+                    SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_RESOLUTION_DPI, scanResolutionDPI);
+                    SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_START_PIXEL, 0);
+                    SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_START_PIXEL, 0);
+                    SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_SIZE_PIXELS, width);
+                    SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_SIZE_PIXELS, height);
+                    break;
+                case 600:
+                    width = (int)((widthA4at600dpi / 600.0) * scanResolutionDPI);
+                    height = (int)((heightA4at600dpi / 600.0) * scanResolutionDPI);
+                    SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_RESOLUTION_DPI, scanResolutionDPI);
+                    SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_RESOLUTION_DPI, scanResolutionDPI);
+                    SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_START_PIXEL, 0);
+                    SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_START_PIXEL, 0);
+                    SetWIAProperty(scannnerItem.Properties, WIA_HORIZONTAL_SCAN_SIZE_PIXELS, width);
+                    SetWIAProperty(scannnerItem.Properties, WIA_VERTICAL_SCAN_SIZE_PIXELS, height);
+                    break;
+            }
             SetWIAProperty(scannnerItem.Properties, WIA_SCAN_BRIGHTNESS_PERCENTS, brightnessPercents);
             SetWIAProperty(scannnerItem.Properties, WIA_SCAN_CONTRAST_PERCENTS, contrastPercents);
             SetWIAProperty(scannnerItem.Properties, WIA_SCAN_COLOR_MODE, colorMode);

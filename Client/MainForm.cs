@@ -307,7 +307,7 @@ namespace Client
             if(images.Count > 0)
             {
                 string filename = param.default_save_path + "\\" + DateTime.Now.ToString("ddMMyyyy_HHmmssff") + ".jpg";
-                
+                create_jpg(filename);
             }
         }
 
