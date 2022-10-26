@@ -44,6 +44,7 @@ namespace Server
             }
             catch(Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 txt_logger.write_log(ex.ToString());
             }
             close_server();

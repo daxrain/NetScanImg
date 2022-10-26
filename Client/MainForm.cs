@@ -42,7 +42,7 @@ namespace Client
 
             //Set graphical elements
             dpi_comboBox.SelectedIndex = 0;
-            color_comboBox.SelectedIndex = 0;
+            color_comboBox.SelectedIndex = 2;
             nextImage_button.Enabled = false;
             deleteImage_button.Enabled = false;
             previousImage_button.Enabled = false;
