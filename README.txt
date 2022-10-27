@@ -13,3 +13,4 @@ https://social.msdn.microsoft.com/Forums/windows/en-US/2d5a6fbf-f1ba-44a3-a957-e
 https://bjdejongblog.nl/scanning-an-image-wth-csharp/
 https://stackoverflow.com/questions/55049546/generating-photo-quality-scans-with-wia-in-c-sharp
 https://learn.microsoft.com/en-us/windows/win32/wia/-wia-wiaitempropscanneritem
+https://stackoverflow.com/questions/56360036/crop-correct-part-of-image-while-the-picturebox-is-in-zoom-mode (Fantastico! Geniale!)

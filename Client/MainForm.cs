@@ -29,14 +29,16 @@ namespace Client
         private static Parameters param;
         private static List<System.Drawing.Image> images = new List<System.Drawing.Image>();
         private static int list_images_selected_index = 0;
-        private bool _selecting;
-        private Rectangle _selection;
-        private Image _originalImage;
+        Point pDown = Point.Empty;
+        Rectangle rect = Rectangle.Empty;
 
         public MainForm()
         {
+            string app_data_roaming_directory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string netscanimg_dir_file = Path.Combine(app_data_roaming_directory, "NetScanImg", "param.xml");
+
             InitializeComponent();
-            if (File.Exists("param.xml"))
+            if (File.Exists(netscanimg_dir_file))
             {
                 param = Parameters.readFile("param.xml");
             }
@@ -363,151 +365,113 @@ namespace Client
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Fits an image to the size of a picturebox
-        /// </summary>
-        /// <param name="image">
-        /// image to be fit
-        /// </param>
-        /// <param name="picBox">
-        /// picturebox in that the image should fit
-        /// </param>
-        /// <returns>
-        /// fitted image
-        /// </returns>
-        /// <remarks>
-        /// Although the picturebox has the SizeMode-property that offers
-        /// the same functionality an OutOfMemory-Exception is thrown
-        /// when assigning images to a picturebox several times.
-        /// 
-        /// AFAIK the SizeMode is designed for assigning an image to
-        /// picturebox only once.
-        /// </remarks>
-        public static Image Fit2PictureBox(Image image, PictureBox picBox)
-        {
-            Bitmap bmp = null;
-            Graphics g;
-            if (image != null)
-            {
-                // Scale:
-                double scaleY = (double)image.Width / picBox.Width;
-                double scaleX = (double)image.Height / picBox.Height;
-                double scale = scaleY < scaleX ? scaleX : scaleY;
-
-                // Create new bitmap:
-                bmp = new Bitmap(
-                    (int)((double)image.Width / scale),
-                    (int)((double)image.Height / scale));
-
-                // Set resolution of the new image:
-                bmp.SetResolution(
-                    image.HorizontalResolution,
-                    image.VerticalResolution);
-
-                // Create graphics:
-                g = Graphics.FromImage(bmp);
-
-                // Set interpolation mode:
-                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-
-                // Draw the new image:
-                g.DrawImage(
-                    image,
-                    new Rectangle(            // Destination
-                        0, 0,
-                        bmp.Width, bmp.Height),
-                    new Rectangle(            // Source
-                        0, 0,
-                        image.Width, image.Height),
-                    GraphicsUnit.Pixel);
-
-                // Release the resources of the graphics:
-                g.Dispose();
-
-                // Release the resources of the origin image:
-                image.Dispose();
-            }
-
-            return bmp;
-        }
+        } 
 
         private void scanned_images_PictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            // Starting point of the selection:
-            if (e.Button == MouseButtons.Left)
-            {
-                _selecting = true;
-                _selection = new Rectangle(new Point(e.X, e.Y), new Size());
-            }
+            pDown = e.Location;
+            scanned_images_PictureBox.Refresh();
         }
 
         private void scanned_images_PictureBox_MouseMove(object sender, MouseEventArgs e)
         {
-            // Update the actual size of the selection:
-            if (_selecting)
-            {
-                _selection.Width = e.X - _selection.X;
-                _selection.Height = e.Y - _selection.Y;
+            if (!e.Button.HasFlag(MouseButtons.Left)) return;
 
-                // Redraw the picturebox:
+            rect = new Rectangle(pDown, new Size(e.X - pDown.X, e.Y - pDown.Y));
+            using (Graphics g = scanned_images_PictureBox.CreateGraphics())
+            {
                 scanned_images_PictureBox.Refresh();
+                g.DrawRectangle(Pens.Orange, rect);
             }
         }
 
         private void scanned_images_PictureBox_Paint(object sender, PaintEventArgs e)
         {
-            if (_selecting)
-            {
-                // Draw a rectangle displaying the current selection
-                Pen pen = Pens.Red;
-                e.Graphics.DrawRectangle(pen, _selection);
-            }
+            Pen drawLine = new Pen(Color.Red);
+            drawLine.DashStyle = DashStyle.Dash;
+            e.Graphics.DrawRectangle(drawLine, rect);
         }
 
         
         private void scanned_images_PictureBox_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && _selecting && _selection.Size != new Size() && images.Count > 0)
+            if (scanned_images_PictureBox.Image != null)
             {
-                _originalImage = scanned_images_PictureBox.Image;
-                // Create cropped image:
-                Image img = Crop(scanned_images_PictureBox.Image, _selection);
+                Rectangle iR = ImageArea(scanned_images_PictureBox);
+                rect = new Rectangle(pDown.X - iR.X, pDown.Y - iR.Y,
+                                     e.X - pDown.X, e.Y - pDown.Y);
+                Rectangle rectSrc = Scaled(rect, scanned_images_PictureBox, true);
+                Rectangle rectDest = new Rectangle(Point.Empty, rectSrc.Size);
+                if (rectDest != null && (rectDest.Width > 0 || rectDest.Height > 0))
+                {
+                    Bitmap bmp = new Bitmap(rectDest.Width, rectDest.Height);
+                    using (Graphics g = Graphics.FromImage(bmp))
+                    {
+                        g.DrawImage(scanned_images_PictureBox.Image, rectDest, rectSrc, GraphicsUnit.Pixel);
+                    }
+                    scanned_images_PictureBox.Image = null;
+                    scanned_images_PictureBox.Image = bmp;
+                    images[list_images_selected_index] = bmp;
+                }
+            }
+            //clear the area
+            rect = new Rectangle(0,0,0,0);
+            scanned_images_PictureBox.Refresh();
+        }
 
-                // Fit image to the picturebox:
-                scanned_images_PictureBox.Image = Fit2PictureBox(img, scanned_images_PictureBox);
-                images[list_images_selected_index].Dispose();
-                images[list_images_selected_index] = scanned_images_PictureBox.Image;
-                _selecting = false;
+        Rectangle ImageArea(PictureBox pbox)
+        {
+            Size si = pbox.Image.Size;
+            Size sp = pbox.ClientSize;
+
+            if (pbox.SizeMode == PictureBoxSizeMode.StretchImage)
+                return pbox.ClientRectangle;
+            if (pbox.SizeMode == PictureBoxSizeMode.Normal ||
+                pbox.SizeMode == PictureBoxSizeMode.AutoSize)
+                return new Rectangle(Point.Empty, si);
+            if (pbox.SizeMode == PictureBoxSizeMode.CenterImage)
+                return new Rectangle(new Point((sp.Width - si.Width) / 2,
+                                    (sp.Height - si.Height) / 2), si);
+
+            //  PictureBoxSizeMode.Zoom
+            float ri = 1f * si.Width / si.Height;
+            float rp = 1f * sp.Width / sp.Height;
+            if (rp > ri)
+            {
+                int width = si.Width * sp.Height / si.Height;
+                int left = (sp.Width - width) / 2;
+                return new Rectangle(left, 0, width, sp.Height);
             }
             else
-                _selecting = false;
+            {
+                int height = si.Height * sp.Width / si.Width;
+                int top = (sp.Height - height) / 2;
+                return new Rectangle(0, top, sp.Width, height);
+            }
         }
 
-        public static Image Crop(Image image, Rectangle selection)
+        Rectangle Scaled(Rectangle rect, PictureBox pbox, bool scale)
         {
-            Bitmap bmp = image as Bitmap;
-            Bitmap cropBmp = null;
-            // Check if it is a bitmap:
-            if (bmp != null)
-            {
-                cropBmp = bmp.Clone(selection, bmp.PixelFormat);
-
-                // Release the resources:
-                image.Dispose();
-            }
-
-            return cropBmp;
+            float factor = GetFactor(pbox);
+            if (!scale) factor = 1f / factor;
+            return Rectangle.Round(new RectangleF(rect.X * factor, rect.Y * factor,
+                                       rect.Width * factor, rect.Height * factor));
         }
 
-        private void cancel_crop_button_Click(object sender, EventArgs e)
+        float GetFactor(PictureBox pBox)
         {
-            scanned_images_PictureBox.Image = _originalImage;
-            if(images.Count >0)
-            {
-                images[list_images_selected_index] = _originalImage;
-            }
+            if (pBox.Image == null) return 0;
+            Size si = pBox.Image.Size;
+            Size sp = pBox.ClientSize;
+            float ri = 1f * si.Width / si.Height;
+            float rp = 1f * sp.Width / sp.Height;
+            float factor = 1f * pBox.Image.Width / pBox.ClientSize.Width;
+            if (rp > ri) factor = 1f * pBox.Image.Height / pBox.ClientSize.Height;
+            return factor;
+        }
+        private void crop_button_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

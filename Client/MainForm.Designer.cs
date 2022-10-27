@@ -33,7 +33,6 @@
             this.btn_scan = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.cancel_crop_button = new System.Windows.Forms.Button();
             this.clear_button = new System.Windows.Forms.Button();
             this.save_image_button = new System.Windows.Forms.Button();
             this.saveas_button = new System.Windows.Forms.Button();
@@ -86,6 +85,7 @@
             this.scanned_images_PictureBox.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.scanned_images_PictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.scanned_images_PictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.scanned_images_PictureBox.Cursor = System.Windows.Forms.Cursors.Cross;
             this.scanned_images_PictureBox.Location = new System.Drawing.Point(43, 58);
             this.scanned_images_PictureBox.Name = "scanned_images_PictureBox";
             this.scanned_images_PictureBox.Size = new System.Drawing.Size(393, 526);
@@ -119,7 +119,6 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.cancel_crop_button);
             this.tabPage1.Controls.Add(this.clear_button);
             this.tabPage1.Controls.Add(this.save_image_button);
             this.tabPage1.Controls.Add(this.saveas_button);
@@ -138,16 +137,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "SCANSIONE";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // cancel_crop_button
-            // 
-            this.cancel_crop_button.Location = new System.Drawing.Point(504, 561);
-            this.cancel_crop_button.Name = "cancel_crop_button";
-            this.cancel_crop_button.Size = new System.Drawing.Size(123, 23);
-            this.cancel_crop_button.TabIndex = 16;
-            this.cancel_crop_button.Text = "Annulla Ritaglia";
-            this.cancel_crop_button.UseVisualStyleBackColor = true;
-            this.cancel_crop_button.Click += new System.EventHandler(this.cancel_crop_button_Click);
             // 
             // clear_button
             // 
@@ -475,6 +464,5 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.Button save_image_button;
         private System.Windows.Forms.Button clear_button;
-        private System.Windows.Forms.Button cancel_crop_button;
     }
 }

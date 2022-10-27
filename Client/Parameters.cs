@@ -31,18 +31,30 @@ namespace Client
 
         public static Parameters readFile(string filename)
         {
-            Parameters param;
+            Parameters param = null;
+            string app_data_roaming_directory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string netscanimg_dir_file = Path.Combine(app_data_roaming_directory, "NetScanImg",filename);
             XmlSerializer xs = new XmlSerializer(typeof(Parameters));
-            FileStream fs = new FileStream(filename, FileMode.Open);
-            param = (Parameters)xs.Deserialize(fs);
-            fs.Close();
+
+            if (File.Exists(netscanimg_dir_file))
+            {
+                
+                FileStream fs = new FileStream(netscanimg_dir_file, FileMode.Open);
+                param = (Parameters)xs.Deserialize(fs);
+                fs.Close();
+            }
             return param;
         }
 
         public static void SaveFile(Parameters param, string filename)
         {
+            string app_data_roaming_directory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string netscanimg_dir = Path.Combine(app_data_roaming_directory, "NetScanImg");
             XmlSerializer xs = new XmlSerializer(typeof(Parameters));
-            TextWriter txtWriter = new StreamWriter("param.xml");
+            if (!Directory.Exists(netscanimg_dir))
+                Directory.CreateDirectory(netscanimg_dir);
+
+            TextWriter txtWriter = new StreamWriter(Path.Combine(netscanimg_dir, filename));
             xs.Serialize(txtWriter, param);
             txtWriter.Close();
         }
