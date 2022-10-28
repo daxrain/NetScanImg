@@ -25,7 +25,9 @@ namespace Server
         const string WIA_SCAN_CONTRAST_PERCENTS = "6155";
         const string WIA_MANUFACTURER = "3";
         const string WIA_DESCRIPTION = "4";
-        const string WIA_LAMP_WARM_UP_TIME = "6161";
+        //const string WIA_LAMP_WARM_UP_TIME = "6161";
+        //const string WIA_IPS_DOCUMENT_HANDLING_SELECT =
+        //const string WIA_IPS_LAMP = 
         const int widthA4at300dpi = 2480;
         const int heightA4at300dpi = 3508;
         const int widthA4at600dpi = 4960;

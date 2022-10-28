@@ -1,4 +1,4 @@
-INSALL THE SERVICE:
+	INSALL THE SERVICE:
 Open a command prompt as an Administrator
 cd C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe + Your copied path + \your service name + .exe
 If you want to uninstall your service, fire the below command.
@@ -14,3 +14,4 @@ https://bjdejongblog.nl/scanning-an-image-wth-csharp/
 https://stackoverflow.com/questions/55049546/generating-photo-quality-scans-with-wia-in-c-sharp
 https://learn.microsoft.com/en-us/windows/win32/wia/-wia-wiaitempropscanneritem
 https://stackoverflow.com/questions/56360036/crop-correct-part-of-image-while-the-picturebox-is-in-zoom-mode (Fantastico! Geniale!)
+https://raw.githubusercontent.com/codingbandit/Aspose.OMR.Workflow/master/WIAScanner.cs
