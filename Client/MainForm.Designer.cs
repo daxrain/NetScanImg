@@ -33,6 +33,8 @@
             this.btn_scan = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.rotate_right_button = new System.Windows.Forms.Button();
+            this.rotate_left_button = new System.Windows.Forms.Button();
             this.clear_button = new System.Windows.Forms.Button();
             this.save_image_button = new System.Windows.Forms.Button();
             this.saveas_button = new System.Windows.Forms.Button();
@@ -119,6 +121,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.rotate_right_button);
+            this.tabPage1.Controls.Add(this.rotate_left_button);
             this.tabPage1.Controls.Add(this.clear_button);
             this.tabPage1.Controls.Add(this.save_image_button);
             this.tabPage1.Controls.Add(this.saveas_button);
@@ -137,6 +141,26 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "SCANSIONE";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // rotate_right_button
+            // 
+            this.rotate_right_button.Location = new System.Drawing.Point(522, 531);
+            this.rotate_right_button.Name = "rotate_right_button";
+            this.rotate_right_button.Size = new System.Drawing.Size(75, 23);
+            this.rotate_right_button.TabIndex = 17;
+            this.rotate_right_button.Text = "Ruota a DX";
+            this.rotate_right_button.UseVisualStyleBackColor = true;
+            this.rotate_right_button.Click += new System.EventHandler(this.rotate_right_button_Click);
+            // 
+            // rotate_left_button
+            // 
+            this.rotate_left_button.Location = new System.Drawing.Point(522, 561);
+            this.rotate_left_button.Name = "rotate_left_button";
+            this.rotate_left_button.Size = new System.Drawing.Size(75, 23);
+            this.rotate_left_button.TabIndex = 16;
+            this.rotate_left_button.Text = "Ruota a SX";
+            this.rotate_left_button.UseVisualStyleBackColor = true;
+            this.rotate_left_button.Click += new System.EventHandler(this.rotate_left_button_Click);
             // 
             // clear_button
             // 
@@ -316,7 +340,7 @@
             this.scanner_comboBox.FormattingEnabled = true;
             this.scanner_comboBox.Location = new System.Drawing.Point(43, 18);
             this.scanner_comboBox.Name = "scanner_comboBox";
-            this.scanner_comboBox.Size = new System.Drawing.Size(219, 23);
+            this.scanner_comboBox.Size = new System.Drawing.Size(261, 23);
             this.scanner_comboBox.TabIndex = 3;
             // 
             // tabPage2
@@ -464,5 +488,7 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.Button save_image_button;
         private System.Windows.Forms.Button clear_button;
+        private System.Windows.Forms.Button rotate_right_button;
+        private System.Windows.Forms.Button rotate_left_button;
     }
 }

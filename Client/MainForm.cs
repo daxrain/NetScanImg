@@ -9,13 +9,12 @@ using Protocol.MyMessages;
 using Protocol;
 using System.IO;
 using System.Collections.Generic;
-using iText.IO.Image;
-using iText.Kernel.Pdf;
-using iText.Layout;
-using iText.Layout.Properties;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using System.Drawing;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace Client
 {
@@ -274,6 +273,29 @@ namespace Client
         {
             try
             {
+                iTextSharp.text.Document doc = new iTextSharp.text.Document();
+                PdfWriter.GetInstance(doc, new FileStream(filename, FileMode.Create));
+                doc.Open();
+
+                foreach (System.Drawing.Image img in images)
+                {
+                    var itextsharpImg = iTextSharp.text.Image.GetInstance(img, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    itextsharpImg.SetAbsolutePosition(0, 0); // set the position to bottom left corner of pdf
+                    itextsharpImg.Alignment = iTextSharp.text.Image.ALIGN_BOTTOM;
+                    itextsharpImg.ScaleToFit(iTextSharp.text.PageSize.A4.Width, iTextSharp.text.PageSize.A4.Height);
+                    doc.Add(itextsharpImg);
+                    doc.NewPage();
+                }
+                doc.Close();
+                MessageBox.Show("Documento salvato in:\n" + filename);
+            }
+            catch (System.IO.DirectoryNotFoundException ex)
+            {
+                MessageBox.Show("Impossibile trovare la cartella per i salvataggi di default:\n " + param.default_save_path);
+            }
+
+            /*try
+            {
                 PdfWriter writer = new PdfWriter(filename);
                 PdfDocument pdf = new PdfDocument(writer);
                 Document document = new Document(pdf);
@@ -292,17 +314,17 @@ namespace Client
             catch (System.IO.DirectoryNotFoundException ex)
             {
                 MessageBox.Show("Impossibile trovare la cartella per i salvataggi di default:\n " + param.default_save_path);
-            }
+            }*/
         }
 
-        private byte[] ImageToByteArray(System.Drawing.Image imageIn)
+        /*private byte[] ImageToByteArray(System.Drawing.Image imageIn)
         {
             using (var ms = new MemoryStream())
             {
                 imageIn.Save(ms, imageIn.RawFormat);
                 return ms.ToArray();
             }
-        }
+        }*/
 
         private void save_image_button_Click(object sender, EventArgs e)
         {
@@ -404,14 +426,21 @@ namespace Client
                 Rectangle rectDest = new Rectangle(Point.Empty, rectSrc.Size);
                 if (rectDest != null && (rectDest.Width > 0 || rectDest.Height > 0))
                 {
-                    Bitmap bmp = new Bitmap(rectDest.Width, rectDest.Height);
-                    using (Graphics g = Graphics.FromImage(bmp))
+                    try
                     {
-                        g.DrawImage(scanned_images_PictureBox.Image, rectDest, rectSrc, GraphicsUnit.Pixel);
+                        Bitmap bmp = new Bitmap(rectDest.Width, rectDest.Height);
+                        using (Graphics g = Graphics.FromImage(bmp))
+                        {
+                            g.DrawImage(scanned_images_PictureBox.Image, rectDest, rectSrc, GraphicsUnit.Pixel);
+                        }
+                        scanned_images_PictureBox.Image = null;
+                        scanned_images_PictureBox.Image = bmp;
+                        images[list_images_selected_index] = bmp;
                     }
-                    scanned_images_PictureBox.Image = null;
-                    scanned_images_PictureBox.Image = bmp;
-                    images[list_images_selected_index] = bmp;
+                    catch(System.ArgumentException ex)
+                    {
+                        MessageBox.Show("Impossibile ridimensionare l'immagine");
+                    }
                 }
             }
             //clear the area
@@ -469,9 +498,25 @@ namespace Client
             if (rp > ri) factor = 1f * pBox.Image.Height / pBox.ClientSize.Height;
             return factor;
         }
-        private void crop_button_Click(object sender, EventArgs e)
+
+        private void rotate_right_button_Click(object sender, EventArgs e)
         {
-            
+            if(scanned_images_PictureBox.Image != null)
+            {
+                scanned_images_PictureBox.Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                scanned_images_PictureBox.Refresh();
+                images[list_images_selected_index] = scanned_images_PictureBox.Image;
+            }
+        }
+
+        private void rotate_left_button_Click(object sender, EventArgs e)
+        {
+            if (scanned_images_PictureBox.Image != null)
+            {
+                scanned_images_PictureBox.Image.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                scanned_images_PictureBox.Refresh();
+                images[list_images_selected_index] = scanned_images_PictureBox.Image;
+            }
         }
     }
 }
