@@ -11,6 +11,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
 using System.Xml.Serialization;
 using System.ComponentModel.Design;
+using System.Runtime.InteropServices;
 
 namespace Server
 {
@@ -139,22 +140,32 @@ namespace Server
                     case request_type.SCAN:
                         Image scannedImage = null;
                         Request scan_req = req_msg;
+
                         if (Scanner.scanner_list().Count > 0 && !String.IsNullOrEmpty(scan_req.Device.ID) )
                         {
-                            Thread thread = new Thread(
-                                () =>
-                                    scannedImage = Scanner.scan(Scanner.getDevInfo(scan_req.Device.ID), scan_req.Device.Options)
-                                );
-                            thread.Start();
-                            thread.Join();
+                            try
+                            {
+                                Thread thread = new Thread(
+                                    () =>
+                                        scannedImage = Scanner.scan(Scanner.getDevInfo(scan_req.Device.ID), scan_req.Device.Options)
+                                    );
+                                thread.Start();
+                                thread.Join();
 
-                            _tcpClient.Connect(remote_client);
-                            //formatter.Serialize(_tcpClient.GetStream(), new ScanResponse(Image.FromFile(@"C:\porcini.jpg")));
-                            formatter.Serialize(_tcpClient.GetStream(), new ScanResponse(scannedImage));
-                            _tcpClient.Close();
-                            thread.Interrupt();
-                            Console.WriteLine("INVIO IMMAGINE");
-                            txt_logger.write_log("INVIO IMMAGINE");
+                                _tcpClient.Connect(remote_client);
+                                //formatter.Serialize(_tcpClient.GetStream(), new ScanResponse(Image.FromFile(@"C:\porcini.jpg")));
+                                formatter.Serialize(_tcpClient.GetStream(), new ScanResponse(scannedImage));
+                                _tcpClient.Close();
+                                thread.Interrupt();
+                                Console.WriteLine("INVIO IMMAGINE");
+                                txt_logger.write_log("INVIO IMMAGINE");
+                            }
+                            catch(Exception ex)
+                            {
+                                _tcpClient.Connect(remote_client);
+                                formatter.Serialize(_tcpClient.GetStream(), new ScanErrorResponse(ex.ToString()));
+                                _tcpClient.Close();
+                            }
                         }
                         break;
                 }

@@ -63,6 +63,10 @@
             this.server_ip_TextBox = new System.Windows.Forms.TextBox();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.adf_comboBox = new System.Windows.Forms.ComboBox();
+            this.duplex_ComboBox = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.scanned_images_PictureBox)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -174,7 +178,7 @@
             // 
             // save_image_button
             // 
-            this.save_image_button.Location = new System.Drawing.Point(504, 409);
+            this.save_image_button.Location = new System.Drawing.Point(504, 421);
             this.save_image_button.Name = "save_image_button";
             this.save_image_button.Size = new System.Drawing.Size(123, 23);
             this.save_image_button.TabIndex = 14;
@@ -184,7 +188,7 @@
             // 
             // saveas_button
             // 
-            this.saveas_button.Location = new System.Drawing.Point(504, 492);
+            this.saveas_button.Location = new System.Drawing.Point(504, 479);
             this.saveas_button.Name = "saveas_button";
             this.saveas_button.Size = new System.Drawing.Size(123, 23);
             this.saveas_button.TabIndex = 13;
@@ -234,6 +238,10 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label9);
+            this.groupBox1.Controls.Add(this.label8);
+            this.groupBox1.Controls.Add(this.duplex_ComboBox);
+            this.groupBox1.Controls.Add(this.adf_comboBox);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.contrast_TrackBar);
@@ -244,7 +252,7 @@
             this.groupBox1.Controls.Add(this.dpi_comboBox);
             this.groupBox1.Location = new System.Drawing.Point(466, 58);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 329);
+            this.groupBox1.Size = new System.Drawing.Size(200, 345);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Opzioni";
@@ -252,7 +260,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(72, 235);
+            this.label6.Location = new System.Drawing.Point(72, 260);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(59, 15);
             this.label6.TabIndex = 10;
@@ -261,7 +269,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(65, 152);
+            this.label5.Location = new System.Drawing.Point(65, 194);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(66, 15);
             this.label5.TabIndex = 9;
@@ -270,7 +278,7 @@
             // contrast_TrackBar
             // 
             this.contrast_TrackBar.LargeChange = 200;
-            this.contrast_TrackBar.Location = new System.Drawing.Point(26, 253);
+            this.contrast_TrackBar.Location = new System.Drawing.Point(26, 278);
             this.contrast_TrackBar.Maximum = 1000;
             this.contrast_TrackBar.Minimum = -1000;
             this.contrast_TrackBar.Name = "contrast_TrackBar";
@@ -282,7 +290,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(52, 95);
+            this.label4.Location = new System.Drawing.Point(52, 60);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(90, 15);
             this.label4.TabIndex = 8;
@@ -291,7 +299,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(52, 34);
+            this.label3.Location = new System.Drawing.Point(52, 17);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(88, 15);
             this.label3.TabIndex = 7;
@@ -300,7 +308,7 @@
             // brightness_TrackBar
             // 
             this.brightness_TrackBar.LargeChange = 200;
-            this.brightness_TrackBar.Location = new System.Drawing.Point(26, 170);
+            this.brightness_TrackBar.Location = new System.Drawing.Point(26, 212);
             this.brightness_TrackBar.Maximum = 1000;
             this.brightness_TrackBar.Minimum = -1000;
             this.brightness_TrackBar.Name = "brightness_TrackBar";
@@ -317,7 +325,7 @@
             "Bianco e Nero",
             "Colori",
             "Scala di Grigi"});
-            this.color_comboBox.Location = new System.Drawing.Point(26, 113);
+            this.color_comboBox.Location = new System.Drawing.Point(26, 78);
             this.color_comboBox.Name = "color_comboBox";
             this.color_comboBox.Size = new System.Drawing.Size(146, 23);
             this.color_comboBox.TabIndex = 7;
@@ -330,7 +338,7 @@
             "150",
             "300",
             "600"});
-            this.dpi_comboBox.Location = new System.Drawing.Point(26, 52);
+            this.dpi_comboBox.Location = new System.Drawing.Point(26, 35);
             this.dpi_comboBox.Name = "dpi_comboBox";
             this.dpi_comboBox.Size = new System.Drawing.Size(146, 23);
             this.dpi_comboBox.TabIndex = 6;
@@ -430,6 +438,40 @@
             this.server_ip_TextBox.Size = new System.Drawing.Size(155, 23);
             this.server_ip_TextBox.TabIndex = 1;
             // 
+            // adf_comboBox
+            // 
+            this.adf_comboBox.FormattingEnabled = true;
+            this.adf_comboBox.Location = new System.Drawing.Point(26, 125);
+            this.adf_comboBox.Name = "adf_comboBox";
+            this.adf_comboBox.Size = new System.Drawing.Size(146, 23);
+            this.adf_comboBox.TabIndex = 11;
+            // 
+            // duplex_ComboBox
+            // 
+            this.duplex_ComboBox.FormattingEnabled = true;
+            this.duplex_ComboBox.Location = new System.Drawing.Point(26, 166);
+            this.duplex_ComboBox.Name = "duplex_ComboBox";
+            this.duplex_ComboBox.Size = new System.Drawing.Size(146, 23);
+            this.duplex_ComboBox.TabIndex = 12;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(83, 107);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(29, 15);
+            this.label8.TabIndex = 13;
+            this.label8.Text = "ADF";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(59, 151);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(72, 15);
+            this.label9.TabIndex = 14;
+            this.label9.Text = "Fronte Retro";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -490,5 +532,9 @@
         private System.Windows.Forms.Button clear_button;
         private System.Windows.Forms.Button rotate_right_button;
         private System.Windows.Forms.Button rotate_left_button;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox duplex_ComboBox;
+        private System.Windows.Forms.ComboBox adf_comboBox;
     }
 }

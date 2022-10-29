@@ -99,5 +99,16 @@ namespace Protocol
                 img = scanned_img;
             }           
         }
+
+        [Serializable]
+        public class ScanErrorResponse : Response
+        {
+            public string error_msg;
+
+            public ScanErrorResponse(string error_msg)
+            {
+                this.error_msg = error_msg;
+            }
+        }
     }
 }

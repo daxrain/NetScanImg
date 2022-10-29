@@ -122,6 +122,10 @@ namespace Client
                         });
                         //this.InvokeEx(f => f.scanned_images_PictureBox.Image = ((ScanResponse)resp).img);
                     }
+                    else if(resp is ScanErrorResponse)
+                    {
+                        MessageBox.Show(((ScanErrorResponse)resp).error_msg);
+                    }
                     else if(resp is EmptyResponse)
                     {
                         MessageBox.Show("Connessione avvenuta con successo");

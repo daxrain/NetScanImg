@@ -33,10 +33,10 @@ namespace Server
         const int widthA4at600dpi = 4960;
         const int heightA4at600dpi = 7016;
 
-        static DeviceManager deviceManager = new DeviceManager();
-
         public static List<Protocol.Scanner> scanner_list()
         {
+            DeviceManager deviceManager = new DeviceManager();
+
             List<Protocol.Scanner> scanner_list = new List<Protocol.Scanner>();
             
             foreach (DeviceInfo dev in deviceManager.DeviceInfos)
@@ -57,6 +57,8 @@ namespace Server
 
         public static DeviceInfo getDevInfo(string devName)
         {
+            DeviceManager deviceManager = new DeviceManager();
+
             foreach (DeviceInfo dev in deviceManager.DeviceInfos)
             {
                 if (dev.DeviceID.Equals(devName))
@@ -90,32 +92,38 @@ namespace Server
                 {
                     Console.WriteLine("The scanner is busy or isn't ready");
                     NetScanImageServer.txt_logger.write_log("The scanner is busy or isn't ready");
+                    throw new Exception("The scanner is busy or isn't ready");
                 }
                 else if (errorCode == 0x80210064)
                 {
                     Console.WriteLine("The scanning process has been cancelled.");
                     NetScanImageServer.txt_logger.write_log("The scanning process has been cancelled.");
+                    throw new Exception("The scanning process has been cancelled.");
                 }
                 else if (errorCode == 0x8021000C)
                 {
                     Console.WriteLine("There is an incorrect setting on the WIA device.");
                     NetScanImageServer.txt_logger.write_log("There is an incorrect setting on the WIA device.");
+                    throw new Exception("There is an incorrect setting on the WIA device.");
                 }
                 else if (errorCode == 0x80210005)
                 {
                     Console.WriteLine("The device is offline. Make sure the device is powered on and connected to the PC.");
                     NetScanImageServer.txt_logger.write_log("The device is offline. Make sure the device is powered on and connected to the PC.");
+                    throw new Exception("The device is offline. Make sure the device is powered on and connected to the PC.");
                 }
                 else if (errorCode == 0x80210001)
                 {
                     Console.WriteLine("An unknown error has occurred with the WIA device.");
                     NetScanImageServer.txt_logger.write_log("An unknown error has occurred with the WIA device.");
+                    throw new Exception("An unknown error has occurred with the WIA device.");
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Errore SCANNER non pronto\n" + ex.ToString());
                 NetScanImageServer.txt_logger.write_log("Errore SCANNER non pronto\n" + ex.ToString());
+                throw new Exception("Errore SCANNER non pronto\n" + ex.ToString());
             }
 
             if(imageFile!=null)

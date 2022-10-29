@@ -37,18 +37,22 @@ namespace Protocol
         public int dpi = 150;
         public int contrast = 0;
         public int brightness = 0;
+        public bool adf = false;
+        public bool duplex = false;
 
         public ScannerOptions()
         {
 
         }
 
-        public ScannerOptions(int color_mode, int dpi, int contrast, int brightness)
+        public ScannerOptions(int color_mode, int dpi, int contrast, int brightness, bool adf, bool duplex)
         {
             this.color_mode = color_mode;
             this.dpi = dpi;
             this.contrast = contrast;
             this.brightness = brightness;
+            this.adf = adf;
+            this.duplex = duplex;
         }   
     }
 }
