@@ -25,6 +25,7 @@ namespace Server
         const string WIA_SCAN_CONTRAST_PERCENTS = "6155";
         const string WIA_MANUFACTURER = "3";
         const string WIA_DESCRIPTION = "4";
+        const string WIA_DOCUMENT_HANDLING_SELECT = "3088";
         //const string WIA_LAMP_WARM_UP_TIME = "6161";
         //const string WIA_IPS_DOCUMENT_HANDLING_SELECT =
         //const string WIA_IPS_LAMP = 
@@ -78,6 +79,8 @@ namespace Server
                 // Select the scanner
                 Item scannerItem = device.Items[1];
 
+                if(options.adf)
+                    SetWIAProperty(device.Properties, WIA_DOCUMENT_HANDLING_SELECT, 1); //1 is feeder 2 is flatbed
                 AdjustScannerSettings(scannerItem, options.dpi, 0, 0, 1250, 1700, options.brightness, options.contrast, options.color_mode);
 
                 imageFile = (ImageFile)scannerItem.Transfer(FormatID.wiaFormatBMP);
