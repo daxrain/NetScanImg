@@ -193,20 +193,18 @@ namespace Server
 
             using (MemoryStream stream = new MemoryStream(data))
             {
-                using (Image scannedImage = Image.FromStream(stream))
-                {
-                    BitmapDecoder decoder = TiffBitmapDecoder.Create(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                var decoder = new TiffBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
 
-                    Int32 frameCount = decoder.Frames.Count;
+                Int32 frameCount = decoder.Frames.Count;
 
-                    BitmapFrame imageFrame = decoder.Frames[1];
+                BitmapSource imageFrame = decoder.Frames[1];
+
+                result = GetBitmap(imageFrame);
+                //result = new Bitmap(imageFrame.PixelWidth, imageFrame.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
 
-                    result = GetBitmap(imageFrame);
-                }
                 //return imageFrame;
             }
-
             return result;
         }
 
