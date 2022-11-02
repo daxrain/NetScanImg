@@ -145,26 +145,27 @@ namespace Server
                         {
                             try
                             {
-                                Thread thread = new Thread(
+                                /*Thread thread = new Thread(
                                     () =>
                                         scannedImage = Scanner.scan(Scanner.getDevInfo(scan_req.Device.ID), scan_req.Device.Options)
                                     );
                                 thread.Start();
-                                thread.Join();
-
+                                thread.Join();*/
+                                scannedImage = Scanner.scan(Scanner.getDevInfo(scan_req.Device.ID), scan_req.Device.Options);
                                 _tcpClient.Connect(remote_client);
                                 //formatter.Serialize(_tcpClient.GetStream(), new ScanResponse(Image.FromFile(@"C:\porcini.jpg")));
                                 formatter.Serialize(_tcpClient.GetStream(), new ScanResponse(scannedImage));
                                 _tcpClient.Close();
-                                thread.Interrupt();
+                                //thread.Interrupt();
                                 Console.WriteLine("INVIO IMMAGINE");
                                 txt_logger.write_log("INVIO IMMAGINE");
                             }
                             catch(Exception ex)
                             {
-                                _tcpClient.Connect(remote_client);
-                                formatter.Serialize(_tcpClient.GetStream(), new ScanErrorResponse(ex.ToString()));
-                                _tcpClient.Close();
+                                Console.WriteLine(ex.ToString());
+                                //_tcpClient.Connect(remote_client);
+                                //formatter.Serialize(_tcpClient.GetStream(), new ScanErrorResponse(ex.ToString()));
+                                //_tcpClient.Close();
                             }
                         }
                         break;
