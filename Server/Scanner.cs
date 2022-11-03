@@ -199,10 +199,9 @@ namespace Server
 
                 BitmapSource imageFrame = decoder.Frames[1];
 
-                result = GetBitmap(imageFrame);
+                //result = GetBitmap(imageFrame);
+                result = BitmapFromSource(imageFrame);
                 //result = new Bitmap(imageFrame.PixelWidth, imageFrame.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-
-
                 //return imageFrame;
             }
             return result;
@@ -210,30 +209,19 @@ namespace Server
 
         private static Bitmap GetBitmap(BitmapSource source)
         {
-            Bitmap bmp = new Bitmap(
-              source.PixelWidth,
-              source.PixelHeight,
-              PixelFormat.Format32bppPArgb);
-            BitmapData data = bmp.LockBits(
-              new Rectangle(Point.Empty, bmp.Size),
-              ImageLockMode.WriteOnly,
-              PixelFormat.Format32bppPArgb);
-            source.CopyPixels(
-              Int32Rect.Empty,
-              data.Scan0,
-              data.Height * data.Stride,
-              data.Stride);
+            Bitmap bmp = new Bitmap(source.PixelWidth,source.PixelHeight,PixelFormat.Format32bppPArgb);
+            BitmapData data = bmp.LockBits(new Rectangle(Point.Empty, bmp.Size),ImageLockMode.WriteOnly,PixelFormat.Format32bppPArgb);
+            source.CopyPixels(Int32Rect.Empty,data.Scan0,data.Height * data.Stride,data.Stride);
             bmp.UnlockBits(data);
             return bmp;
         }
 
-        private static Bitmap BitmapFromSource(BitmapSource bitmapsource)
+        private static  System.Drawing.Bitmap BitmapFromSource(BitmapSource bitmapsource)
         {
             System.Drawing.Bitmap bitmap;
             using (MemoryStream outStream = new MemoryStream())
             {
                 BitmapEncoder enc = new BmpBitmapEncoder();
-
                 enc.Frames.Add(BitmapFrame.Create(bitmapsource));
                 enc.Save(outStream);
                 bitmap = new System.Drawing.Bitmap(outStream);
