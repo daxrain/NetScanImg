@@ -41,7 +41,6 @@ namespace Server
             {
                 if (dev.Type == WiaDeviceType.ScannerDeviceType)
                 {
-
                     string prop_manufacturer = (string)GetWIAProperty(dev.Properties, WIA_MANUFACTURER);
                     string prop_desc = (string)GetWIAProperty(dev.Properties, WIA_DESCRIPTION);
                     string scanner_name = prop_manufacturer + " - " + prop_desc;
