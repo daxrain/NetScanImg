@@ -12,6 +12,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace Server
 {
@@ -138,7 +139,7 @@ namespace Server
                         txt_logger.write_log("INVIO MESSAGGIO LIST");
                         break;
                     case request_type.SCAN:
-                        Image scannedImage = null;
+                        List <Image> scannedImage = null;
                         Request scan_req = req_msg;
 
                         if (Scanner.scanner_list().Count > 0 && !String.IsNullOrEmpty(scan_req.Device.ID) )
@@ -163,9 +164,9 @@ namespace Server
                             catch(Exception ex)
                             {
                                 Console.WriteLine(ex.ToString());
-                                //_tcpClient.Connect(remote_client);
-                                //formatter.Serialize(_tcpClient.GetStream(), new ScanErrorResponse(ex.ToString()));
-                                //_tcpClient.Close();
+                                _tcpClient.Connect(remote_client);
+                                formatter.Serialize(_tcpClient.GetStream(), new ScanErrorResponse(ex.ToString()));
+                                _tcpClient.Close();
                             }
                         }
                         break;

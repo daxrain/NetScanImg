@@ -12,6 +12,7 @@ using Protocol;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using Point = System.Drawing.Point;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Server
 {
@@ -30,10 +31,9 @@ namespace Server
         const string WIA_DESCRIPTION = "4";
         const string WIA_DOCUMENT_HANDLING_SELECT = "3088";
         const string WIA_DEVICE_PROPERTY_PAGES_ID = "3096";
-        const string WIA_DOCUMENT_HANDLING_STATUS = "3087";
-
+        //const string WIA_DOCUMENT_HANDLING_STATUS = "3087";
         //const string WIA_LAMP_WARM_UP_TIME = "6161;
-        const string WIA_IPS_LAMP = "3105";
+        //const string WIA_IPS_LAMP = "3105";
         const int widthA4at300dpi = 2480;
         const int heightA4at300dpi = 3508;
         const int widthA4at600dpi = 4960;
@@ -74,10 +74,12 @@ namespace Server
             return null;
         }
 
-        public static Image scan(DeviceInfo dev, Protocol.ScannerOptions options)
+        public static List <Image> scan(DeviceInfo dev, Protocol.ScannerOptions options)
         {
             ImageFile imageFile = null;
-            Image resultimg = null;
+
+            List<Image> imageList = new List<Image>();
+
             try
             {
                 // Connect to the first available scanner
@@ -85,32 +87,39 @@ namespace Server
                 // Select the scanner
                 Item scannerItem = device.Items[1];
 
-                //if(options.adf)
-                //SelectDeviceDocumentHandling(device, DeviceDocumentHandling.Feeder);
-                var doc_status = GetWIAProperty(device.Properties, WIA_DOCUMENT_HANDLING_STATUS);
-                
 
+
+                //var doc_status = GetWIAProperty(device.Properties, WIA_DOCUMENT_HANDLING_STATUS); //restituisce sempre 5 impossibile distinguere tra uno stato e l'altro dello scanner
                 //SetWIAProperty(device.Properties, WIA_IPS_LAMP, 0);
-                SetWIAProperty(device.Properties, WIA_DEVICE_PROPERTY_PAGES_ID, 2);//2 fronte retro 1 singola 0 continuo
-                //SetWIAProperty(device.Properties, WIA_DEVICE_PROPERTY_PAGES_ID, 0);
-                SetWIAProperty(device.Properties, WIA_DOCUMENT_HANDLING_SELECT, Convert.ToInt64("0x004", 16)); //1 is feeder 2 is flatbed
-                                                                                                               // FEEDER = 0x001, DUPLEX = 0x004, FRONT_FIRST = 0x008
-                                                                                                               //FRONT_ONLY = 0x020
-                                                                                                               // PREFEED = 0x100, AUTO_ADVANCE = 0x200
+                if (options.adf)
+                {
+                    SetWIAProperty(device.Properties, WIA_DEVICE_PROPERTY_PAGES_ID, 1);
+                    SetWIAProperty(device.Properties, WIA_DOCUMENT_HANDLING_SELECT, 1);
+                }
                 
-                
+                if(options.duplex)
+                {
+                    SetWIAProperty(device.Properties, WIA_DEVICE_PROPERTY_PAGES_ID, 2);//2 fronte retro 1 singola 0 continuo
+                    SetWIAProperty(device.Properties, WIA_DOCUMENT_HANDLING_SELECT, 4); //1 is feeder 2 is flatbed FEEDER = 0x001, DUPLEX = 0x004, FRONT_FIRST = 0x008 FRONT_ONLY = 0x020 PREFEED = 0x100, AUTO_ADVANCE = 0x200
+                }
+ 
                 AdjustScannerSettings(scannerItem, options.dpi, 0, 0, 1250, 1700, options.brightness, options.contrast, options.color_mode);
-
-
-         
-                //do
+                
+                do
                 {
                     imageFile = null;
                     imageFile = (ImageFile)scannerItem.Transfer(FormatID.wiaFormatTIFF);
-                    if(imageFile != null)
-                        resultimg = tiffToBitmap(imageFile);
+                    File.Delete("tmp.tif");
+                    if (imageFile != null)
+                    {
+                        imageFile.SaveFile("tmp.tif");
+                        List<Image> tiffFrames = TiffFileToBitmap("tmp.tif");
+                        foreach(Image frame in tiffFrames)
+                            imageList.Add(frame);
+                    }
+                    File.Delete("tmp.tif");
                 }
-                //while (imageFile != null);
+                while (imageFile != null && options.adf);
             }
             catch (COMException e)
             {
@@ -122,111 +131,62 @@ namespace Server
                 {
                     Console.WriteLine("The scanner is busy or isn't ready");
                     NetScanImageServer.txt_logger.write_log("The scanner is busy or isn't ready");
-                    //throw new Exception("The scanner is busy or isn't ready");
+                    throw new Exception("The scanner is busy or isn't ready");
                 }
                 else if (errorCode == 0x80210064)
                 {
                     Console.WriteLine("The scanning process has been cancelled.");
                     NetScanImageServer.txt_logger.write_log("The scanning process has been cancelled.");
-                    //throw new Exception("The scanning process has been cancelled.");
+                    throw new Exception("The scanning process has been cancelled.");
                 }
                 else if (errorCode == 0x8021000C)
                 {
                     Console.WriteLine("There is an incorrect setting on the WIA device.");
                     NetScanImageServer.txt_logger.write_log("There is an incorrect setting on the WIA device.");
-                    //throw new Exception("There is an incorrect setting on the WIA device.");
+                    throw new Exception("There is an incorrect setting on the WIA device.");
                 }
                 else if (errorCode == 0x80210005)
                 {
                     Console.WriteLine("The device is offline. Make sure the device is powered on and connected to the PC.");
                     NetScanImageServer.txt_logger.write_log("The device is offline. Make sure the device is powered on and connected to the PC.");
-                    //throw new Exception("The device is offline. Make sure the device is powered on and connected to the PC.");
+                    throw new Exception("The device is offline. Make sure the device is powered on and connected to the PC.");
                 }
                 else if (errorCode == 0x80210001)
                 {
                     Console.WriteLine("An unknown error has occurred with the WIA device.");
                     NetScanImageServer.txt_logger.write_log("An unknown error has occurred with the WIA device.");
-                    //throw new Exception("An unknown error has occurred with the WIA device.");
+                    throw new Exception("An unknown error has occurred with the WIA device.");
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 NetScanImageServer.txt_logger.write_log(ex.ToString());
-                //throw new Exception(ex.ToString());
+                throw new Exception(ex.ToString());
             }
 
-            return resultimg;
+            return imageList;
         }
 
-        private static Bitmap ToBitmap(ImageFile image)
+        private static List<Image> TiffFileToBitmap(string fileName)
         {
-            Bitmap result;
-            byte[] data;
+            List<Image> result = new List<Image>();
 
-            data = (byte[])image.FileData.get_BinaryData();
-
-            using (MemoryStream stream = new MemoryStream(data))
+            using (Image tiffImage = Image.FromFile(fileName))
             {
-                using (Image scannedImage = Image.FromStream(stream))
-                {
-                    result = new Bitmap(image.Width, image.Height, PixelFormat.Format32bppArgb);
+                FrameDimension frameDimensions = new FrameDimension(tiffImage.FrameDimensionsList[0]);
+                // Gets the number of pages from the tiff image (if multipage) 
 
-                    using (Graphics g = Graphics.FromImage(result))
-                    {
-                        g.Clear(Color.Transparent);
-                        g.PageUnit = GraphicsUnit.Pixel;
-                        g.DrawImage(scannedImage, new Rectangle(0, 0, image.Width, image.Height));
-                    }
+                int frameNum = tiffImage.GetFrameCount(frameDimensions);
+                for (int frame = 0; frame < frameNum; frame++)
+                {
+                    tiffImage.SelectActiveFrame(frameDimensions, frame);
+                    Bitmap bmp = new Bitmap(tiffImage);
+                    result.Add(bmp);
                 }
             }
 
             return result;
-        }
-
-        private static Bitmap tiffToBitmap(ImageFile image)
-        {
-            Bitmap result;
-            byte[] data;
-
-            data = (byte[])image.FileData.get_BinaryData();
-
-            using (MemoryStream stream = new MemoryStream(data))
-            {
-                var decoder = new TiffBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-
-                Int32 frameCount = decoder.Frames.Count;
-
-                BitmapSource imageFrame = decoder.Frames[1];
-
-                //result = GetBitmap(imageFrame);
-                result = BitmapFromSource(imageFrame);
-                //result = new Bitmap(imageFrame.PixelWidth, imageFrame.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-                //return imageFrame;
-            }
-            return result;
-        }
-
-        private static Bitmap GetBitmap(BitmapSource source)
-        {
-            Bitmap bmp = new Bitmap(source.PixelWidth,source.PixelHeight,PixelFormat.Format32bppPArgb);
-            BitmapData data = bmp.LockBits(new Rectangle(Point.Empty, bmp.Size),ImageLockMode.WriteOnly,PixelFormat.Format32bppPArgb);
-            source.CopyPixels(Int32Rect.Empty,data.Scan0,data.Height * data.Stride,data.Stride);
-            bmp.UnlockBits(data);
-            return bmp;
-        }
-
-        private static  System.Drawing.Bitmap BitmapFromSource(BitmapSource bitmapsource)
-        {
-            System.Drawing.Bitmap bitmap;
-            using (MemoryStream outStream = new MemoryStream())
-            {
-                BitmapEncoder enc = new BmpBitmapEncoder();
-                enc.Frames.Add(BitmapFrame.Create(bitmapsource));
-                enc.Save(outStream);
-                bitmap = new System.Drawing.Bitmap(outStream);
-            }
-            return bitmap;
         }
 
         private static void AdjustScannerSettings(IItem scannnerItem, int scanResolutionDPI, int scanStartLeftPixel, int scanStartTopPixel, int scanWidthPixels, int scanHeightPixels, int brightnessPercents, int contrastPercents, int colorMode)
@@ -281,15 +241,77 @@ namespace Server
             prop.set_Value(ref propValue);
         }
 
-        public enum DeviceDocumentHandling : int
+        /*
+        private static Bitmap ToBitmap(ImageFile image)
         {
-            Feeder = 1,
-            FlatBed = 2
+            Bitmap result;
+            byte[] data;
+
+            data = (byte[])image.FileData.get_BinaryData();
+
+            using (MemoryStream stream = new MemoryStream(data))
+            {
+                using (Image scannedImage = Image.FromStream(stream))
+                {
+                    result = new Bitmap(image.Width, image.Height, PixelFormat.Format32bppArgb);
+
+                    using (Graphics g = Graphics.FromImage(result))
+                    {
+                        g.Clear(Color.Transparent);
+                        g.PageUnit = GraphicsUnit.Pixel;
+                        g.DrawImage(scannedImage, new Rectangle(0, 0, image.Width, image.Height));
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private static Bitmap tiffToBitmap(ImageFile image)
+        {
+            Bitmap result;
+            byte[] data;
+
+            data = (byte[])image.FileData.get_BinaryData();
+
+            using (MemoryStream stream = new MemoryStream(data))
+            {
+                var decoder = new TiffBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+
+                Int32 frameCount = decoder.Frames.Count;
+
+                BitmapSource imageFrame = decoder.Frames[1];
+                //result = GetBitmap(imageFrame);
+                result = GetBitmap(imageFrame);
+                //result = new Bitmap(imageFrame.PixelWidth, imageFrame.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                //return imageFrame;
+            }
+            return result;
         }
 
         
+        private static Bitmap GetBitmap(BitmapSource source)
+        {
+            Bitmap bmp = new Bitmap(source.PixelWidth,source.PixelHeight,PixelFormat.Format32bppPArgb);
+            BitmapData data = bmp.LockBits(new Rectangle(Point.Empty, bmp.Size),ImageLockMode.WriteOnly,PixelFormat.Format32bppPArgb);
+            source.CopyPixels(Int32Rect.Empty,data.Scan0,data.Height * data.Stride,data.Stride);
+            bmp.UnlockBits(data);
+            return bmp;
+        }
 
-        /*
+        private static  System.Drawing.Bitmap BitmapFromSource(BitmapSource bitmapsource)
+        {
+            System.Drawing.Bitmap bitmap;
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(bitmapsource));
+                enc.Save(outStream);
+                bitmap = new System.Drawing.Bitmap(outStream);
+            }
+            return bitmap;
+        }
+        
         public enum WiaProperty
         {
             DeviceId = 2,

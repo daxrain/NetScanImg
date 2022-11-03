@@ -50,6 +50,8 @@ namespace Client
             //Set graphical elements
             dpi_comboBox.SelectedIndex = 0;
             color_comboBox.SelectedIndex = 2;
+            adf_comboBox.SelectedIndex = 0;
+            duplex_ComboBox.SelectedIndex = 0;
             nextImage_button.Enabled = false;
             deleteImage_button.Enabled = false;
             previousImage_button.Enabled = false;
@@ -107,17 +109,22 @@ namespace Client
                     {
                         this.Invoke((MethodInvoker)delegate ()
                         {
-                            System.Drawing.Image scanned_img = ((ScanResponse)resp).img;
-                            if (scanned_img != null)
+                            List <System.Drawing.Image> scanned_images = ((ScanResponse)resp).images;
+                            if (scanned_images != null & scanned_images.Count > 0)
                             {
-                                images.Add(scanned_img);
+                                foreach(System.Drawing.Image img in scanned_images)
+                                    images.Add(img);
                                 list_images_selected_index = images.Count - 1;
-                                scanned_images_PictureBox.Image = scanned_img;
+                                scanned_images_PictureBox.Image = images[list_images_selected_index];
                                 if (list_images_selected_index != 0)
                                 {
                                     previousImage_button.Enabled = true;
                                     deleteImage_button.Enabled = true;
                                 }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Nessun documento scansionato.");
                             }
                         });
                         //this.InvokeEx(f => f.scanned_images_PictureBox.Image = ((ScanResponse)resp).img);
@@ -163,7 +170,8 @@ namespace Client
             device.Options.color_mode = color_comboBox.SelectedIndex;
             device.Options.brightness = brightness_TrackBar.Value;
             device.Options.contrast = contrast_TrackBar.Value;
-            
+            device.Options.adf = Convert.ToBoolean(adf_comboBox.SelectedIndex);
+            device.Options.duplex = Convert.ToBoolean(duplex_ComboBox.SelectedIndex);
             send_request(new Request(request_type.SCAN, device));
         }
 

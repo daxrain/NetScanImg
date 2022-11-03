@@ -43,6 +43,10 @@
             this.previousImage_button = new System.Windows.Forms.Button();
             this.nextImage_button = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.duplex_ComboBox = new System.Windows.Forms.ComboBox();
+            this.adf_comboBox = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.contrast_TrackBar = new System.Windows.Forms.TrackBar();
@@ -63,10 +67,6 @@
             this.server_ip_TextBox = new System.Windows.Forms.TextBox();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.adf_comboBox = new System.Windows.Forms.ComboBox();
-            this.duplex_ComboBox = new System.Windows.Forms.ComboBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.scanned_images_PictureBox)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -257,6 +257,48 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Opzioni";
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(59, 151);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(72, 15);
+            this.label9.TabIndex = 14;
+            this.label9.Text = "Fronte Retro";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(83, 107);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(29, 15);
+            this.label8.TabIndex = 13;
+            this.label8.Text = "ADF";
+            // 
+            // duplex_ComboBox
+            // 
+            this.duplex_ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.duplex_ComboBox.FormattingEnabled = true;
+            this.duplex_ComboBox.Items.AddRange(new object[] {
+            "NO",
+            "SI"});
+            this.duplex_ComboBox.Location = new System.Drawing.Point(26, 166);
+            this.duplex_ComboBox.Name = "duplex_ComboBox";
+            this.duplex_ComboBox.Size = new System.Drawing.Size(146, 23);
+            this.duplex_ComboBox.TabIndex = 12;
+            // 
+            // adf_comboBox
+            // 
+            this.adf_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.adf_comboBox.FormattingEnabled = true;
+            this.adf_comboBox.Items.AddRange(new object[] {
+            "NO",
+            "SI"});
+            this.adf_comboBox.Location = new System.Drawing.Point(26, 125);
+            this.adf_comboBox.Name = "adf_comboBox";
+            this.adf_comboBox.Size = new System.Drawing.Size(146, 23);
+            this.adf_comboBox.TabIndex = 11;
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -437,40 +479,6 @@
             this.server_ip_TextBox.Name = "server_ip_TextBox";
             this.server_ip_TextBox.Size = new System.Drawing.Size(155, 23);
             this.server_ip_TextBox.TabIndex = 1;
-            // 
-            // adf_comboBox
-            // 
-            this.adf_comboBox.FormattingEnabled = true;
-            this.adf_comboBox.Location = new System.Drawing.Point(26, 125);
-            this.adf_comboBox.Name = "adf_comboBox";
-            this.adf_comboBox.Size = new System.Drawing.Size(146, 23);
-            this.adf_comboBox.TabIndex = 11;
-            // 
-            // duplex_ComboBox
-            // 
-            this.duplex_ComboBox.FormattingEnabled = true;
-            this.duplex_ComboBox.Location = new System.Drawing.Point(26, 166);
-            this.duplex_ComboBox.Name = "duplex_ComboBox";
-            this.duplex_ComboBox.Size = new System.Drawing.Size(146, 23);
-            this.duplex_ComboBox.TabIndex = 12;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(83, 107);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(29, 15);
-            this.label8.TabIndex = 13;
-            this.label8.Text = "ADF";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(59, 151);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(72, 15);
-            this.label9.TabIndex = 14;
-            this.label9.Text = "Fronte Retro";
             // 
             // MainForm
             // 

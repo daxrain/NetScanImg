@@ -92,11 +92,11 @@ namespace Protocol
         [Serializable]
         public class ScanResponse : Response
         {
-            public Image img;
+            public List <Image> images;
 
-            public ScanResponse(Image scanned_img)
+            public ScanResponse(List <Image> images)
             {
-                img = scanned_img;
+                this.images = images;
             }           
         }
 
